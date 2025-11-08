@@ -9,7 +9,7 @@ def search_commons_images(query, limit=5):
         "gsrlimit": limit,
         "prop": "imageinfo",
         "iiprop": "url|extmetadata",
-        "iiurlwidth": 400,       # optional: get thumbnail-sized images
+        "iiurlwidth": 400,      
         "format": "json"
     }
 
