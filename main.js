@@ -1,5 +1,5 @@
-import { giveFunctionToButton } from "./scripts/counter";
 import {getTotalNutrition, updateNutritionFacts} from "./scripts/nutrition_api"
+import { show_recipe } from "./scripts/get_recipe"
 
 //giveFunctionToButton()
 
@@ -9,3 +9,4 @@ import {getTotalNutrition, updateNutritionFacts} from "./scripts/nutrition_api"
   updateNutritionFacts(totals);
 })();
 */
+show_recipe();
