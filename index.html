@@ -13,60 +13,37 @@
 
 </head>
 <body>
+
     <div class="header">
         <h1>
             <img class = "globe" src="https://upload.wikimedia.org/wikipedia/commons/6/6b/Rotating_globe.gif"> 
             Global Bites
         </h1>
     </div>
-    
     <div class="main-container">
         <div id="map"></div>
 
         <div class="side-panel">
             <h2>Recipe Details</h2>
-            <div style="margin-bottom: 15px;">
-                <label for="food-name-input" style="display: block; margin-bottom: 5px; color: #333;">Enter Food Name:</label>
-                <input type="text" id="food-name-input" placeholder="e.g., Apple Pie" style="width: 90%; padding: 8px;">
-                <button id="get-recipe-btn" style="padding: 8px 12px; margin-top: 10px;">Get Recipe</button>
-            </div>
+            <button id="add">ADD</button>
+            <button id="skip">SKIP</button>
+            <div id="result"></div>
+
             <p style="color: #7f8c8d; line-height: 1.6;">
                 Select a location on the map to view recipe details and information about the dish.
             </p>
 
             <input id="food" placeholder="Enter food name">
             <button onclick="getImage()">Search</button>
-
+            <br>
             <div id="result"></div>
-
-            <script>
-            async function getImage() {
-                const food = document.getElementById("food").value;
-                const res = await fetch(`http://127.0.0.1:5000/get_image?food=${encodeURIComponent(food)}`);
-                const data = await res.json();
-
-                if (data.url) {
-                document.getElementById("result").innerHTML =
-                    `<img src="${data.url}" alt="${food}" width="400">`;
-                } else {
-                document.getElementById("result").innerText = "No image found.";
-                }
-            }
-            </script>
-            <p style="color: #7f8c8d; line-height: 1.6;">
-                Select a location on the map to view recipe details and information about the dish.
-            </p>
             <div style="margin-top: 30px;">
-                <h3 style="color: #34495e; margin-bottom: 15px;">Quick Info</h3>
+                <h3 style="color: #34495e; margin-bottom: 15px;">"recipe name goes here"</h3>
                 <div class="ingredient-item">
-                    <strong>Prep Time:</strong> -
+                    <strong>Ingredients:</strong> -
                 </div>
                 <div class="ingredient-item">
-                    <strong>Cook Time:</strong> -
-                </div>
-                <div class="ingredient-item">
-                    <strong>Servings:</strong> -
-                </div>
+                    <strong>Recipe:</strong> -
             </div>
         </div>
     </div>
@@ -79,19 +56,19 @@
         <button class="close-btn" onclick="toggleSheet()">×</button>
         <h2>Ingredients</h2>
         
-        <div class="ingredient-item">
-            <strong>Main Ingredients</strong>
-            <p style="margin-top: 10px; color: #7f8c8d;">Select a recipe to view ingredients</p>
+        <div class="recipe_1">
+            <strong>'Recipe 1 Name'</strong>
+            <p style="margin-top: 10px; color: #7f8c8d;">-ingredients per recipe-</p>
         </div>
         
-        <div class="ingredient-item">
-            <strong>Spices & Seasonings</strong>
-            <p style="margin-top: 10px; color: #7f8c8d;">--</p>
+        <div class="recipe_2">
+            <strong>'Recipe 2 Name'</strong>
+            <p style="margin-top: 10px; color: #7f8c8d;">-ingredients per recipe-</p>
         </div>
         
-        <div class="ingredient-item">
-            <strong>Optional Add-ins</strong>
-            <p style="margin-top: 10px; color: #7f8c8d;">--</p>
+        <div class="recipe_3">
+            <strong>'Recipe 3 Name'</strong>
+            <p style="margin-top: 10px; color: #7f8c8d;">-ingredients per recipe-</p>
         </div>
     </div>
 
@@ -100,5 +77,6 @@
     <script src="map.js"></script>
     <script src="bundle.js"></script>
     <script src="popups.js"></script>
+    <script src="images.js"></script>
 </body>
 

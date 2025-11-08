@@ -32,7 +32,7 @@
         .then(response => response.json())
         .then(data => {
             data.elements.forEach(el => {
-              if (el.lat && el.lon) {
+            if (el.lat && el.lon) {
                 const name = el.tags.name || "Unnamed supermarket";
                 const website = el.tags.website || el.tags.url;
 
@@ -49,8 +49,8 @@
                 }
 
                 L.marker([el.lat, el.lon])
-                  .addTo(map)
-                  .bindPopup(popupText);
+                .addTo(map)
+                .bindPopup(`<b>${name}</b>`);
             }
             });
         })
