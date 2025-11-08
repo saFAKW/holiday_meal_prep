@@ -91,8 +91,7 @@ function updateIngredientsList(fullRecipeText) {
         sheet.appendChild(noItem);
     }
 }
-export function add_to_basket(){
-
+export function add_ingredients_to_list(){
     const recipeButton = document.getElementById("add-to-basket");
     const recipeText = document.getElementById("recipe-p");
     recipeButton.addEventListener("click", async () => {
