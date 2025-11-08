@@ -29,8 +29,14 @@
 
         <div class="side-panel">
             <h2>Recipe Details</h2>
-            <input id="food" placeholder="Enter food name">
-            <button onclick="getImage()">Search</button>
+            <div style="margin-bottom: 15px;">
+                <label for="food-name-input" style="display: block; margin-bottom: 5px; color: #333;">Enter Food Name:</label>
+                <input type="text" id="food-name-input" placeholder="e.g., Apple Pie" style="width: 90%; padding: 8px;">
+                <button id="get-recipe-btn" style="padding: 8px 12px; margin-top: 10px;">Get Recipe</button>
+            </div>
+            <p style="color: #7f8c8d; line-height: 1.6;">
+                Select a location on the map to view recipe details and information about the dish.
+            </p>
 
             <div id="result"></div>
 
