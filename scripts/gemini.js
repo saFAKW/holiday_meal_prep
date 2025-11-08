@@ -3,19 +3,6 @@ const API_KEY = "AIzaSyAGePYh6PX1JwXAWRFDbUupdeHEa9HQ8NY";
 const MODEL_NAME = "gemini-2.5-flash";
 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${API_KEY}`;
 
-function giveFunctionToButton2(){
-    let count = 0;
-    const button = document.getElementById("btn2");
-    const prompt = document.getElementById("text");
-
-    button.addEventListener("click", async () => {
-        display.textContent = "waiting...";
-        const responseText = await callGeminiApi(prompt);
-        display.textContent = responseText;
-    });
-}
-export {giveFunctionToButton2}
-
 async function callGeminiApi(prompt) {
     const requestBody = {
         contents: [
@@ -42,7 +29,6 @@ async function callGeminiApi(prompt) {
         }
 
         const data = await response.json();
-        
         const text = data.candidates[0].content.parts[0].text;
         return text;
 
@@ -51,3 +37,5 @@ async function callGeminiApi(prompt) {
         return `error ${error.message}`;
     }
 }
+
+export {callGeminiApi}
