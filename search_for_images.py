@@ -1,7 +1,7 @@
-from flask import Flask, jsonify, request, render_template
+from flask import Flask, jsonify, request
 import requests
+from flask_cors import CORS
 
-# Wikimedia Commons Image Search Functions
 
 WIKIMEDIA_API = "https://commons.wikimedia.org/w/api.php"
 USER_AGENT = "holiday_meal_prep/1.0"
@@ -35,7 +35,6 @@ def search_commons_images(query, limit=5, namespace=None, width=800):
     for page in pages:
         imageinfo_list = page.get("imageinfo")
         if not imageinfo_list:
-            # skip pages that have no imageinfo (common for non-file pages)
             continue
         info = imageinfo_list[0] or {}
         url = info.get("thumburl") or info.get("url")
@@ -67,14 +66,12 @@ def get_commons_image_for_food(food):
         f"{food} food"
     ]
 
-    # preferred: search File namespace (6) to get file pages
     for q in queries:
         results = search_commons_images(q, limit=5, namespace=6, width=800)
         for r in results:
             if r.get("url"):
                 return r
 
-    # fallback: broader search
     for q in queries:
         results = search_commons_images(q, limit=3, namespace=None, width=800)
         for r in results:
@@ -84,12 +81,9 @@ def get_commons_image_for_food(food):
     return None
 
 
-# Flask Web API
-app = Flask(__name__, template_folder="templates", static_folder="static")
-
-@app.route("/")
-def index():
-    return render_template("index.html")
+#Flask API (no HTML rendering)
+app = Flask(__name__)
+CORS(app)
 
 @app.route("/get_image")
 def get_image():

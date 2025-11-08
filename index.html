@@ -5,6 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Global Bites</title>
     <link rel="stylesheet" href="style.css">
+        <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <style>
+      #map {
+        width: 90vmin;   /* vmin uses the smaller of viewport width/height */
+        height: 90vmin;  /* ensures it’s a square */
+        margin: 0 auto;  /* centers it horizontally */
+        border-radius: 10px; /* optional – adds rounded corners */
+        box-shadow: 0 0 10px rgba(0,0,0,0.2); /* optional styling */
+      }
+    </style>
 </head>
 <body>
     <div class="header">
@@ -12,14 +25,35 @@
     </div>
     
     <div class="main-container">
-        <div class="map-container">
-            <div class="content-placeholder">
-                Map Area<br>
-            </div>
-        </div>
+        <div id="map"></div>
 
         <div class="side-panel">
             <h2>Recipe Details</h2>
+            <div style="margin-bottom: 15px;">
+                <label for="food-name-input" style="display: block; margin-bottom: 5px; color: #333;">Enter Food Name:</label>
+                <input type="text" id="food-name-input" placeholder="e.g., Apple Pie" style="width: 90%; padding: 8px;">
+                <button id="get-recipe-btn" style="padding: 8px 12px; margin-top: 10px;">Get Recipe</button>
+            </div>
+            <p style="color: #7f8c8d; line-height: 1.6;">
+                Select a location on the map to view recipe details and information about the dish.
+            </p>
+
+            <div id="result"></div>
+
+            <script>
+            async function getImage() {
+                const food = document.getElementById("food").value;
+                const res = await fetch(`http://127.0.0.1:5000/get_image?food=${encodeURIComponent(food)}`);
+                const data = await res.json();
+
+                if (data.url) {
+                document.getElementById("result").innerHTML =
+                    `<img src="${data.url}" alt="${food}" width="400">`;
+                } else {
+                document.getElementById("result").innerText = "No image found.";
+                }
+            }
+            </script>
             <p style="color: #7f8c8d; line-height: 1.6;">
                 Select a location on the map to view recipe details and information about the dish.
             </p>
@@ -63,12 +97,59 @@
     </div>
 
 
+    <script>
+    // Initialize map
+    const map = L.map('map').setView([0, 0], 13);
 
+    // Add OpenStreetMap tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Try to get user's location
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(success, error);
+    } else {
+        alert("Geolocation is not supported by this browser.");
+    }
+
+    function success(position) {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+
+        // Set map view to user's location
+        map.setView([lat, lon], 15);
+
+        // Add marker for user's location
+        const userMarker = L.marker([lat, lon]).addTo(map)
+        .bindPopup("<b>You are here</b>").openPopup();
+
+        // Search for nearby supermarkets using Overpass API
+        const overpassUrl = `https://overpass-api.de/api/interpreter?data=[out:json];node(around:2000,${lat},${lon})["shop"="supermarket"];out;`;
+
+        fetch(overpassUrl)
+        .then(response => response.json())
+        .then(data => {
+            data.elements.forEach(el => {
+            if (el.lat && el.lon) {
+                const name = el.tags.name || "Unnamed supermarket";
+                L.marker([el.lat, el.lon])
+                .addTo(map)
+                .bindPopup(`<b>${name}</b>`);
+            }
+            });
+        })
+        .catch(err => console.error("Error fetching supermarkets:", err));
+    }
+
+    function error() {
+        alert("Unable to retrieve your location.");
+    }
+    </script>
     
 </body>
-</html>
     <script src="bundle.js"></script>
     <script src="popups.js"></script>
 </body>
-</html>
 
