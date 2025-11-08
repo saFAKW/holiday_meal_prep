@@ -32,19 +32,11 @@
         .then(response => response.json())
         .then(data => {
             data.elements.forEach(el => {
-              if (el.lat && el.lon) {
+            if (el.lat && el.lon) {
                 const name = el.tags.name || "Unnamed supermarket";
-                const website = el.tags.website || el.tags.url;
-
-                // Popup text: name + website link if available
-                let popupText = `<b>${name}</b>`;
-                if (website) {
-                  popupText += `<br><a href="${website}" target="_blank">Visit website</a>`;
-                }
-
                 L.marker([el.lat, el.lon])
-                  .addTo(map)
-                  .bindPopup(popupText);
+                .addTo(map)
+                .bindPopup(`<b>${name}</b>`);
             }
             });
         })
