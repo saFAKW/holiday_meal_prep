@@ -44,6 +44,8 @@ british_cuisine = [
 const counter = 0
 const current_cuisine = british_cuisine[counter]
 
+
+
 function updateIngredientsList(fullRecipeText) {
     
     const sheet = document.getElementById("ingredientsSheet");
@@ -92,7 +94,7 @@ function updateIngredientsList(fullRecipeText) {
     }
 }
 export function add_ingredients_to_list(){
-    const recipeButton = document.getElementById("add-to-basket");
+    const recipeButton = document.getElementById("add");
     const recipeText = document.getElementById("recipe-p");
     recipeButton.addEventListener("click", async () => {
         updateIngredientsList(recipeText.textContent);
