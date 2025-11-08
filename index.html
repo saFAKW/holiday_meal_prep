@@ -5,9 +5,91 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-    <h1>Simple Counter</h1>
-    <div id="count">0</div>
-    <button id="btn">Increase</button>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Bites</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="header">
+        <h1>🌍 Global Bites</h1>
+    </div>
+
+    <div class="main-container">
+        <div class="map-container">
+            <div class="content-placeholder">
+                Map Area<br>
+                <small style="font-size: 0.6em;">2/3 of page width</small>
+            </div>
+        </div>
+
+        <div class="side-panel">
+            <h2>Recipe Details</h2>
+            <p style="color: #7f8c8d; line-height: 1.6;">
+                Select a location on the map to view recipe details and information about the dish.
+            </p>
+            <div style="margin-top: 30px;">
+                <h3 style="color: #34495e; margin-bottom: 15px;">Quick Info</h3>
+                <div class="ingredient-item">
+                    <strong>Prep Time:</strong> --
+                </div>
+                <div class="ingredient-item">
+                    <strong>Cook Time:</strong> --
+                </div>
+                <div class="ingredient-item">
+                    <strong>Servings:</strong> --
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toggle button for ingredients sheet -->
+    <button class="toggle-btn" onclick="toggleSheet()">Ingredients ➤</button>
+
+    <!-- Drag-in side sheet -->
+    <div class="ingredients-sheet" id="ingredientsSheet">
+        <button class="close-btn" onclick="toggleSheet()">×</button>
+        <h2>🥘 Ingredients</h2>
+        
+        <div class="ingredient-item">
+            <strong>Main Ingredients</strong>
+            <p style="margin-top: 10px; color: #7f8c8d;">Select a recipe to view ingredients</p>
+        </div>
+        
+        <div class="ingredient-item">
+            <strong>Spices & Seasonings</strong>
+            <p style="margin-top: 10px; color: #7f8c8d;">--</p>
+        </div>
+        
+        <div class="ingredient-item">
+            <strong>Optional Add-ins</strong>
+            <p style="margin-top: 10px; color: #7f8c8d;">--</p>
+        </div>
+    </div>
+
+    <script>
+        function toggleSheet() {
+            const sheet = document.getElementById('ingredientsSheet');
+            sheet.classList.toggle('open');
+        }
+
+        // Close sheet when clicking outside
+        document.addEventListener('click', function(event) {
+            const sheet = document.getElementById('ingredientsSheet');
+            const toggleBtn = document.querySelector('.toggle-btn');
+            
+            if (sheet.classList.contains('open') && 
+                !sheet.contains(event.target) && 
+                !toggleBtn.contains(event.target)) {
+                sheet.classList.remove('open');
+            }
+        });
+    </script>
+</body>
+</html>
     <script src="bundle.js"></script>
 </body>
 </html>
