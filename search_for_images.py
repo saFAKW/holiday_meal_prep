@@ -81,7 +81,7 @@ def get_commons_image_for_food(food):
     return None
 
 
-# --- Flask API only (no HTML rendering) ---
+#Flask API (no HTML rendering)
 app = Flask(__name__)
 CORS(app)
 
