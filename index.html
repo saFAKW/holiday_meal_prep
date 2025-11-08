@@ -3,13 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Global Bites</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -19,10 +12,9 @@
     </div>
 
     <div class="main-container">
-        <div class="map-container">
+        <div id="map-container">
             <div class="content-placeholder">
                 Map Area<br>
-                <small style="font-size: 0.6em;">2/3 of page width</small>
             </div>
         </div>
 
@@ -47,12 +39,12 @@
     </div>
 
     <!-- Toggle button for ingredients sheet -->
-    <button class="toggle-btn" onclick="toggleSheet()">Ingredients ➤</button>
+    <button class="toggle-btn" onclick="toggleSheet()">Ingredients</button>
 
     <!-- Drag-in side sheet -->
     <div class="ingredients-sheet" id="ingredientsSheet">
         <button class="close-btn" onclick="toggleSheet()">×</button>
-        <h2>🥘 Ingredients</h2>
+        <h2>Ingredients</h2>
         
         <div class="ingredient-item">
             <strong>Main Ingredients</strong>
@@ -70,27 +62,10 @@
         </div>
     </div>
 
-    <script>
-        function toggleSheet() {
-            const sheet = document.getElementById('ingredientsSheet');
-            sheet.classList.toggle('open');
-        }
-
-        // Close sheet when clicking outside
-        document.addEventListener('click', function(event) {
-            const sheet = document.getElementById('ingredientsSheet');
-            const toggleBtn = document.querySelector('.toggle-btn');
-            
-            if (sheet.classList.contains('open') && 
-                !sheet.contains(event.target) && 
-                !toggleBtn.contains(event.target)) {
-                sheet.classList.remove('open');
-            }
-        });
-    </script>
 </body>
 </html>
     <script src="bundle.js"></script>
+    <script src="popups.js"></script>
 </body>
 </html>
 
