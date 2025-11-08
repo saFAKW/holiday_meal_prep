@@ -93,7 +93,7 @@
 
 .here {
 	place-self: center;
-	background: linear-gradient(90deg, #00f, rgb(163, 42, 179), #00f) -100%/ 200%;
+	background: linear-gradient(90deg, #00f, rgb(108, 181, 165), #00f) -100%/ 200%;
 	/* being excessively careful with compat, 
 	 * though this has been supported unprefixed and 
 	 * in the shorthand across major browsers for a while */
@@ -113,7 +113,7 @@
 }
 @keyframes huecycle {
 	0%   { filter: hue-rotate(0deg); }
-	25%  { filter: hue-rotate(90deg); }
+	25%  { filter: hue-rotate(-60deg); }
 	50%  { filter: hue-rotate(0deg); }
 }
 
@@ -181,4 +181,17 @@ html,body{
     background: #000000;
     background: linear-gradient(90deg, rgba(0, 0, 0, 1) 0%, rgb(37, 96, 113) 15%, rgba(87, 199, 133, 1) 53%, rgba(237, 221, 83, 1) 100%);
     pointer-events: none;
+}
+
+.header-line{
+    display: flex;
+    justify-content: space-between;
+}
+
+.spline{
+    position: absolute;
+    z-index: 10;
+    top:0%;
+    left: 55%;
+    transform: translate(30%, -37%);
 }

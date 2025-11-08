@@ -8,7 +8,7 @@ body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   height: 100vh;
   overflow: hidden;
-  background: #f5f5f5;
+ background: #ffffff;
 }
 
 .header {
@@ -34,7 +34,7 @@ body {
   flex: 2;
   background: white;
   border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -47,7 +47,7 @@ body {
     flex: 1;
     background: white;
     border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.5);
     padding: 30px;
     overflow-y: auto;
 }
@@ -78,9 +78,10 @@ body {
 }
 
 .ingredients-sheet h2 {
-    color: #e74c3c;
+    color: rgba(87, 199, 133, 1);
     margin-bottom: 20px;
     font-size: 2em;
+    text-shadow: rgb(188, 188, 188) 2px 1px 3px;
 }
 
 .close-btn {
@@ -109,7 +110,7 @@ body {
     right: 20px;
     top: 50%;
     transform: translateY(-50%);
-    background: #e74c3c;
+    background: rgba(87, 199, 133, 1);
     color: white;
     border: none;
     padding: 15px 20px;
@@ -122,7 +123,7 @@ body {
 }
 
 .toggle-btn:hover {
-    background: #c0392b;
+    background: rgb(67, 138, 96);
 }
 
 .ingredient-item {
@@ -130,7 +131,7 @@ body {
     padding: 15px;
     margin-bottom: 10px;
     border-radius: 5px;
-    border-left: 4px solid #e74c3c;
+    border-left: 4px solid rgba(87, 199, 133, 1);
 }
 
 .content-placeholder {
@@ -156,8 +157,10 @@ body {
   border: none;
 }
 
-#add { background: #63bb70; }
+#add { background: rgba(87, 199, 133, 1); }
+#add:hover { background: rgb(67, 138, 96) }
 #skip { background: #e74c3c; }
+#skip:hover { background: #8d3b32; }
 
 #map {
   width: 750px;  
