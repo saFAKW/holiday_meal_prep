@@ -16,9 +16,3 @@ function toggleSheet() {
         const sheet = document.getElementById('ingredientsSheet');
     sheet.classList.toggle('open');
     }
-
-function makeMap(){
-    var location = {lat: 25.0330, lng: 121.5654};
-    var map  = new google.map.Map(document.getElementById("map-container"),
-    {zoom: 4, center: location});
-}
