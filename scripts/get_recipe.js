@@ -15,6 +15,7 @@ export async function show_recipe(){
     const button = document.getElementById("get-recipe-btn");
     const display = document.getElementById("recipe-p");
     button.addEventListener("click", async () => {
+        console.log("click the search button")
         if (!input.value.trim()) {
             display.textContent = "Please enter a food name.";
             return;

@@ -61,8 +61,12 @@ function calculateTotalCost(ingredientStr) {
   return parseFloat(totalCost.toFixed(2));
 }
 
+function CostPerPerson(ingredientStr, portions){
+    return parseFloat((calculateTotalCost(ingredientStr)/portions).toFixed(2))
+}
+
 // Example usage:
 // const total = calculateTotalCost("100g Milk, 50 g Eggs, 50 g Goat Milk, 20 ml Pistachios");
 // console.log(total);
 
-export {calculateTotalCost}
+export {calculateTotalCost, CostPerPerson}
