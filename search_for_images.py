@@ -95,6 +95,5 @@ def get_image():
         return jsonify({"error": "no image found"}), 404
     return jsonify(image)
 
-
 if __name__ == "__main__":
     app.run(debug=True)
