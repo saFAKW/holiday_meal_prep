@@ -3,9 +3,11 @@ import { show_recipe } from "./scripts/get_recipe"
 import { add_ingredients_to_list } from "./scripts/add_to_list"
 
 import { calculateTotalCost } from "./scripts/cost_calculation";
+import { bubbles } from "./scripts/bubbles";
 
 const total = calculateTotalCost("100ml Milk, 50 g Eggs, 50 ml Goat Milk, 100 g Pistachios");
 console.log(total);
+bubbles()
 
 //giveFunctionToButton()
 
