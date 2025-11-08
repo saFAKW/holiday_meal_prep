@@ -40,7 +40,6 @@ british_cuisine = [
     "Treacle Tart",
     "Scones with Clotted Cream and Jam"
 ]
-
 //event listeners
 // Close sheet when clicking outside
 document.addEventListener('click', function(event) {
@@ -65,3 +64,4 @@ function makeMap(){
     var map  = new google.map.Map(document.getElementById("map-container"),
     {zoom: 4, center: location});
 }
+
