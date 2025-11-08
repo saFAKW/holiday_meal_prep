@@ -1,5 +1,7 @@
-import requests
 from flask import Flask, jsonify, request
+import urllib.request
+import urllib.parse
+import json
 
 # Wikimedia Commons Image Search Functions
 
@@ -23,9 +25,10 @@ def search_commons_images(query, limit=5, namespace=None, width=800):
         params["gsrnamespace"] = namespace
 
     try:
-        response = requests.get(url, params=params, timeout=8)
-        response.raise_for_status()
-        data = response.json()
+        # Encode and send request
+        full_url = f"{url}?{urllib.parse.urlencode(params)}"
+        with urllib.request.urlopen(full_url, timeout=8) as response:
+            data = json.loads(response.read().decode())
     except Exception as e:
         print("Error fetching from Wikimedia:", e)
         return []
@@ -81,8 +84,6 @@ def get_commons_image_for_food(food):
 
 
 # Flask Web API
-
-
 app = Flask(__name__)
 
 @app.route("/get_image")
