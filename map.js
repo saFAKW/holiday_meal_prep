@@ -23,7 +23,7 @@
 
         // Add marker for user's location
         const userMarker = L.marker([lat, lon]).addTo(map)
-        .bindPopup("<b>You are here</b>").openPopup();
+        .bindPopup(`<b class="here">You are here</b>`).openPopup();
 
         // Search for nearby supermarkets using Overpass API
         const overpassUrl = `https://overpass-api.de/api/interpreter?data=[out:json];node(around:2000,${lat},${lon})["shop"="supermarket"];out;`;
