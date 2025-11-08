@@ -138,3 +138,28 @@ body {
             color: #bdc3c7;
             text-align: center;
         }
+=======
+      font-family: sans-serif;
+      text-align: center;
+      margin-top: 100px;
+      background-color: #f2f2f2;
+    }
+    #count {
+      font-size: 3em;
+      margin: 20px;
+      color: #333;
+    }
+    button {
+      font-size: 1.2em;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      background-color: #0078ff;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #005fcc;
+}
+
+>>>>>>> a2d30a8cdc2aacdc4edc13afe868888581bfa904

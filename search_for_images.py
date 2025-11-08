@@ -1,29 +1,106 @@
+from flask import Flask, jsonify, request, render_template
 import requests
 
-def search_commons_images(query, limit=5):
-    url = "https://commons.wikimedia.org/w/api.php"
+# Wikimedia Commons Image Search Functions
+
+WIKIMEDIA_API = "https://commons.wikimedia.org/w/api.php"
+USER_AGENT = "holiday_meal_prep/1.0"
+
+def search_commons_images(query, limit=5, namespace=None, width=800):
     params = {
         "action": "query",
         "generator": "search",
         "gsrsearch": query,
         "gsrlimit": limit,
         "prop": "imageinfo",
-        "iiprop": "url|extmetadata",
-        "iiurlwidth": 400,      
-        "format": "json"
+        "iiprop": "url|extmetadata|mime",
+        "iiurlwidth": width,
+        "format": "json",
+        "formatversion": 2
     }
+    if namespace is not None:
+        params["gsrnamespace"] = namespace
 
-    response = requests.get(url, params=params)
-    data = response.json()
-    pages = data.get("query", {}).get("pages", {})
+    headers = {"User-Agent": USER_AGENT}
+    try:
+        resp = requests.get(WIKIMEDIA_API, params=params, headers=headers, timeout=10)
+        resp.raise_for_status()
+        data = resp.json()
+    except Exception as e:
+        print("Wikimedia request error:", e)
+        return []
 
+    pages = data.get("query", {}).get("pages", [])
     results = []
-    for page in pages.values():
-        info = page.get("imageinfo", [{}])[0]
+    for page in pages:
+        imageinfo_list = page.get("imageinfo")
+        if not imageinfo_list:
+            # skip pages that have no imageinfo (common for non-file pages)
+            continue
+        info = imageinfo_list[0] or {}
+        url = info.get("thumburl") or info.get("url")
+        if not url:
+            continue
+        extmeta = info.get("extmetadata") or {}
+        license_name = extmeta.get("LicenseShortName", {}).get("value") if extmeta.get("LicenseShortName") else None
+        artist = extmeta.get("Artist", {}).get("value") if extmeta.get("Artist") else None
         results.append({
+            "pageid": page.get("pageid"),
             "title": page.get("title"),
-            "url": info.get("url"),
-            "license": info.get("extmetadata", {}).get("LicenseShortName", {}).get("value"),
-            "artist": info.get("extmetadata", {}).get("Artist", {}).get("value"),
+            "url": url,
+            "mime": info.get("mime"),
+            "license": license_name,
+            "artist": artist
         })
     return results
+
+
+def get_commons_image_for_food(food):
+    if not food or not food.strip():
+        return None
+
+    queries = [
+        food,
+        f"{food} dish",
+        f"{food} cooked",
+        f"{food} recipe",
+        f"{food} food"
+    ]
+
+    # preferred: search File namespace (6) to get file pages
+    for q in queries:
+        results = search_commons_images(q, limit=5, namespace=6, width=800)
+        for r in results:
+            if r.get("url"):
+                return r
+
+    # fallback: broader search
+    for q in queries:
+        results = search_commons_images(q, limit=3, namespace=None, width=800)
+        for r in results:
+            if r.get("url"):
+                return r
+
+    return None
+
+
+# Flask Web API
+app = Flask(__name__, template_folder="templates", static_folder="static")
+
+@app.route("/")
+def index():
+    return render_template("index.html")
+
+@app.route("/get_image")
+def get_image():
+    food = request.args.get("food", "").strip()
+    if not food:
+        return jsonify({"error": "missing 'food' parameter"}), 400
+    image = get_commons_image_for_food(food)
+    if not image:
+        return jsonify({"error": "no image found"}), 404
+    return jsonify(image)
+
+
+if __name__ == "__main__":
+    app.run(debug=True)

@@ -1,3 +1,11 @@
 import { giveFunctionToButton } from "./scripts/counter";
+import {getTotalNutrition, updateNutritionFacts} from "./scripts/nutrition_api"
 
-giveFunctionToButton()
+//giveFunctionToButton()
+
+/*
+(async () => {
+  const totals = await getTotalNutrition("100g eggs, 500ml milk", 2);
+  updateNutritionFacts(totals);
+})();
+*/
