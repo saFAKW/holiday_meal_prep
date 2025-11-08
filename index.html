@@ -11,8 +11,11 @@
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <style>
       #map {
-        height: 90vh;
-        width: 100%;
+        width: 90vmin;   /* vmin uses the smaller of viewport width/height */
+        height: 90vmin;  /* ensures it’s a square */
+        margin: 0 auto;  /* centers it horizontally */
+        border-radius: 10px; /* optional – adds rounded corners */
+        box-shadow: 0 0 10px rgba(0,0,0,0.2); /* optional styling */
       }
     </style>
 </head>
@@ -23,11 +26,6 @@
     
     <div class="main-container">
         <div id="map"></div>
-    
-            <div class="content-placeholder">
-                Map Area<br>
-            </div>
-        </div>
 
         <div class="side-panel">
             <h2>Recipe Details</h2>
@@ -126,9 +124,7 @@
     </script>
     
 </body>
-</html>
     <script src="bundle.js"></script>
     <script src="popups.js"></script>
 </body>
-</html>
 
