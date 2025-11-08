@@ -1,5 +1,14 @@
 import { callGeminiApi } from './gemini.js';
+const PROMPT = `Output exactly two sections separated by a single blank line:
 
+Ingredients:
+- List each ingredient on its own line (one ingredient per line).
+
+Recipe:
+- Provide step-by-step instructions (numbered or bullet points).
+
+Keep the total output within 400 tokens and do not include extra commentary.`
+       
 export async function show_recipe(){
     let text = "";
     const input = document.getElementById("food-name-input");
@@ -10,12 +19,13 @@ export async function show_recipe(){
             display.textContent = "Please enter a food name.";
             return;
         }
-        const prompt = `Please provide a simple recipe for ${input.value.trim()}. Include a list of ingredients and step-by-step instructions. it must within 400 tokens without any `
+        const prompt = `Please provide a simple recipe for ${input.value.trim()} ${PROMPT}`
         const recipe = await callGeminiApi(prompt);
         if(!recipe){    
             recipe = "no results"
         }
-        display.textContent = recipe;
+        const recipeHtml = recipe.replace(/\n/g, '<br>');
+        display.innerHTML = recipeHtml;
     });
     
 }
