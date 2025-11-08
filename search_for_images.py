@@ -1,4 +1,7 @@
 import requests
+from flask import Flask, jsonify, request
+
+# Wikimedia Commons Image Search Functions
 
 def search_commons_images(query, limit=5, namespace=None, width=800):
     """
@@ -23,7 +26,8 @@ def search_commons_images(query, limit=5, namespace=None, width=800):
         response = requests.get(url, params=params, timeout=8)
         response.raise_for_status()
         data = response.json()
-    except Exception:
+    except Exception as e:
+        print("Error fetching from Wikimedia:", e)
         return []
 
     pages = data.get("query", {}).get("pages", {})
@@ -38,6 +42,7 @@ def search_commons_images(query, limit=5, namespace=None, width=800):
             "extmetadata": info.get("extmetadata", {})
         })
     return results
+
 
 def get_commons_image_for_food(food):
     """
@@ -56,14 +61,15 @@ def get_commons_image_for_food(food):
         f"{food} food"
     ]
 
+    # Try restricted namespace (images only)
     for q in queries:
         results = search_commons_images(q, limit=5, namespace=6, width=800)
-        # prefer first result with a usable URL
         for r in results:
             url = r.get("url")
             if url and any(url.lower().endswith(ext) for ext in (".jpg", ".jpeg", ".png", ".gif", ".svg")):
                 return r
-    # fallback: try a broader search without namespace
+
+    # Fallback: broader search without namespace restriction
     for q in queries:
         results = search_commons_images(q, limit=3, namespace=None, width=800)
         for r in results:
@@ -72,3 +78,20 @@ def get_commons_image_for_food(food):
                 return r
 
     return None
+
+
+# Flask Web API
+
+
+app = Flask(__name__)
+
+@app.route("/get_image")
+def get_image():
+    food = request.args.get("food")
+    image = get_commons_image_for_food(food)
+    return jsonify(image or {})
+
+
+if __name__ == "__main__":
+    # Run the Flask app locally
+    app.run(debug=True)
