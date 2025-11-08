@@ -1,0 +1,71 @@
+#nutrition-facts {
+  font-family: Arial, Helvetica, sans-serif;
+  width: 280px;
+  background: white;
+  border: 2px solid black;
+  padding: 10px 12px;
+  color: black;
+  margin: 40px auto;
+  display: flex;
+  flex-direction: column;
+}
+
+#nutrition-facts h1{
+  font-size: 24px;
+  font-weight: 900;
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+#nutrition-facts hr {
+  border: none;
+  border-top: 1px solid black;
+  margin: 4px 0;
+}
+
+#nutrition-facts hr.thick {
+  border-top: 8px solid black;
+  margin: 6px 0;
+}
+
+#nutrition-facts .serving {
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+#nutrition-facts .line,
+#nutrition-facts .subline {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+}
+
+#nutrition-facts .line.bold {
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+#nutrition-facts .subline {
+  padding-left: 15px;
+  font-size: 12px;
+}
+
+#nutrition-facts .calories {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+#nutrition-facts .value {
+  margin-left: auto;
+  padding-left: 5px;
+}
+
+#nutrition-facts .daily {
+  margin-left: 10px;
+}
+
+#nutrition-facts .note {
+  font-size: 10px;
+  margin-top: 5px;
+  color: #333;
+}
