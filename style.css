@@ -36,34 +36,34 @@ body {
   border-radius: 10px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
   display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #95a5a6;
-            font-size: 1.5em;
-            position: relative;
-        }
+  align-items: center;
+  justify-content: center;
+  color: #95a5a6;
+  font-size: 1.5em;
+  position: relative;
+}
 
 .side-panel {
-            flex: 1;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            padding: 30px;
-            overflow-y: auto;
-        }
+    flex: 1;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 30px;
+    overflow-y: auto;
+}
 
 .side-panel h2 {
             color: #2c3e50;
             margin-bottom: 20px;
             font-size: 1.8em;
-        }
+}
 
-        /* Drag-in side sheet */
-        .ingredients-sheet {
-            position: fixed;
-            right: -400px;
-            top: 0;
-            width: 400px;
+/* Drag-in side sheet */
+.ingredients-sheet {
+    position: fixed;
+    right: -400px;
+    top: 0;
+    width: 400px;
             height: 100vh;
             background: white;
             box-shadow: -2px 0 20px rgba(0,0,0,0.2);
@@ -71,11 +71,11 @@ body {
             z-index: 1000;
             padding: 30px;
             overflow-y: auto;
-        }
+}
 
-        .ingredients-sheet.open {
+.ingredients-sheet.open {
             right: 0;
-        }
+}
 
         .ingredients-sheet h2 {
             color: #e74c3c;
@@ -137,3 +137,35 @@ body {
             color: #bdc3c7;
             text-align: center;
         }
+
+#add{
+    top: 20px;
+    right: 20px;
+    background: #5aab60;
+    color: white;
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#skip{
+    top: 20px;
+    right: 20px;
+    background: #e74c3c;
+    color: white;
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
