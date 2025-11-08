@@ -125,15 +125,23 @@ body {
             background: #c0392b;
         }
 
-        .ingredient-item {
-            background: #f8f9fa;
-            padding: 15px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            border-left: 4px solid #e74c3c;
-        }
+.ingredient-item {
+    background: #f8f9fa;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border-left: 4px solid #e74c3c;
+}
 
-        .content-placeholder {
-            color: #bdc3c7;
-            text-align: center;
-        }
+.content-placeholder {
+    color: #bdc3c7;
+    text-align: center;
+}
+
+#map {
+    width: 90vmin;   /* vmin uses the smaller of viewport width/height */
+    height: 90vmin;  /* ensures it’s a square */
+    margin: 0 auto;  /* centers it horizontally */
+    border-radius: 10px; /* optional – adds rounded corners */
+    box-shadow: 0 0 10px rgba(0,0,0,0.2); /* optional styling */
+}

@@ -1,0 +1,48 @@
+// Initialize map
+    const map = L.map('map').setView([0, 0], 13);
+
+    // Add OpenStreetMap tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Try to get user's location
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(success, error);
+    } else {
+        alert("Geolocation is not supported by this browser.");
+    }
+
+    function success(position) {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+
+        // Set map view to user's location
+        map.setView([lat, lon], 15);
+
+        // Add marker for user's location
+        const userMarker = L.marker([lat, lon]).addTo(map)
+        .bindPopup("<b>You are here</b>").openPopup();
+
+        // Search for nearby supermarkets using Overpass API
+        const overpassUrl = `https://overpass-api.de/api/interpreter?data=[out:json];node(around:2000,${lat},${lon})["shop"="supermarket"];out;`;
+
+        fetch(overpassUrl)
+        .then(response => response.json())
+        .then(data => {
+            data.elements.forEach(el => {
+            if (el.lat && el.lon) {
+                const name = el.tags.name || "Unnamed supermarket";
+                L.marker([el.lat, el.lon])
+                .addTo(map)
+                .bindPopup(`<b>${name}</b>`);
+            }
+            });
+        })
+        .catch(err => console.error("Error fetching supermarkets:", err));
+    }
+
+    function error() {
+        alert("Unable to retrieve your location.");
+    }
