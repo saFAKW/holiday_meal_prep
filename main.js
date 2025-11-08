@@ -1,5 +1,9 @@
 import {getTotalNutrition, updateNutritionFacts} from "./scripts/nutrition_api"
 import { show_recipe } from "./scripts/get_recipe"
+import { calculateTotalCost } from "./scripts/cost_calculation";
+
+const total = calculateTotalCost("100ml Milk, 50 g Eggs, 50 ml Goat Milk, 100 g Pistachios");
+console.log(total);
 
 //giveFunctionToButton()
 

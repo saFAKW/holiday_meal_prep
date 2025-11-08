@@ -3,8 +3,311 @@
 
 var _counter = require("./scripts/counter");
 var _nutrition_api = require("./scripts/nutrition_api");
+var _cost_calculation = require("./scripts/cost_calculation");
+var total = (0, _cost_calculation.calculateTotalCost)("100ml Milk, 50 g Eggs, 50 ml Goat Milk, 100 g Pistachios");
+console.log(total);
 
-},{"./scripts/counter":2,"./scripts/nutrition_api":3}],2:[function(require,module,exports){
+//giveFunctionToButton()
+
+/*
+(async () => {
+  const totals = await getTotalNutrition("100g eggs, 500ml milk", 2);
+  updateNutritionFacts(totals);
+})();
+*/
+
+},{"./scripts/cost_calculation":2,"./scripts/counter":4,"./scripts/nutrition_api":5}],2:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.calculateTotalCost = calculateTotalCost;
+function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t["return"] || t["return"](); } finally { if (u) throw o; } } }; }
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
+var costs = require('./costs.json');
+function parseIngredientString(ingredientStr) {
+  return ingredientStr.split(",").map(function (item) {
+    // Match number, optional space, optional unit, then ingredient name (preserve spaces)
+    var match = item.trim().match(/^([\d.]+)\s*([a-zA-Z]+)?\s*(.+)$/);
+    if (!match) return null;
+    var _match = _slicedToArray(match, 4),
+      amount = _match[1],
+      unit = _match[2],
+      name = _match[3];
+    return {
+      amount: parseFloat(amount),
+      unit: unit ? unit.toLowerCase() : null,
+      name: name.trim() // preserve spaces
+    };
+  }).filter(Boolean);
+}
+function convertUnit(amount, fromUnit, toUnit) {
+  if (!fromUnit || !toUnit) return null;
+  fromUnit = fromUnit.toLowerCase();
+  toUnit = toUnit.toLowerCase();
+  if (fromUnit === toUnit) return amount;
+  if (fromUnit === "ml" && toUnit === "g" || fromUnit === "g" && toUnit === "ml") {
+    return amount; // rough approximation
+  }
+  return null; // unknown conversion
+}
+function calculateTotalCost(ingredientStr) {
+  console.log(ingredientStr);
+  var ingredients = parseIngredientString(ingredientStr);
+  var totalCost = 0;
+  var _iterator = _createForOfIteratorHelper(ingredients),
+    _step;
+  try {
+    var _loop = function _loop() {
+        var ing = _step.value;
+        // Find first entry in costs that includes the ingredient name (case-insensitive)
+        var costEntry = Object.entries(costs).find(function (_ref) {
+          var _ref2 = _slicedToArray(_ref, 1),
+            key = _ref2[0];
+          return key.toLowerCase().includes(ing.name.toLowerCase());
+        });
+        if (costEntry) costEntry = costEntry[1];else {
+          costEntry = costs["Default"]; // fallback
+        }
+        var amountInCostUnit = ing.amount;
+        if (ing.unit && costEntry.unit) {
+          var converted = convertUnit(ing.amount, ing.unit, costEntry.unit);
+          if (converted !== null) amountInCostUnit = converted;else {
+            // unit not identifiable, set £1
+            totalCost += 1;
+            return 0; // continue
+          }
+        } else if (!ing.unit) {
+          // missing unit, set £1
+          totalCost += 1;
+          return 0; // continue
+        }
+        var cost = amountInCostUnit / costEntry.per * costEntry.price;
+        totalCost += cost;
+      },
+      _ret;
+    for (_iterator.s(); !(_step = _iterator.n()).done;) {
+      _ret = _loop();
+      if (_ret === 0) continue;
+    }
+  } catch (err) {
+    _iterator.e(err);
+  } finally {
+    _iterator.f();
+  }
+  return parseFloat(totalCost.toFixed(2));
+}
+
+// Example usage:
+// const total = calculateTotalCost("100g Milk, 50 g Eggs, 50 g Goat Milk, 20 ml Pistachios");
+// console.log(total);
+
+},{"./costs.json":3}],3:[function(require,module,exports){
+module.exports={
+  "Basmati Rice": { "price": 0.20, "per": 100, "unit": "g" },
+  "Brown/Long Grain Rice": { "price": 0.15, "per": 100, "unit": "g" },
+  "Orzo": { "price": 0.15, "per": 100, "unit": "g" },
+  "Quinoa": { "price": 0.36, "per": 100, "unit": "g" },
+  "Cous Cous": { "price": 0.32, "per": 100, "unit": "g" },
+  "Lasagne sheets": { "price": 0.35, "per": 100, "unit": "g" },
+  "Lentils Red/Green": { "price": 0.23, "per": 100, "unit": "g" },
+  "Noodles": { "price": 0.50, "per": 100, "unit": "g" },
+  "Pasta Dried-Various": { "price": 0.23, "per": 100, "unit": "g" },
+  "Pudding Rice": { "price": 0.31, "per": 100, "unit": "g" },
+  "Strawberries": { "price": 0.50, "per": 100, "unit": "g" },
+  "Strong flour": { "price": 0.08, "per": 100, "unit": "g" },
+  "Gluten free flour": { "price": 0.60, "per": 100, "unit": "g" },
+  "Polenta flour": { "price": 0.17, "per": 100, "unit": "g" },
+  "Bread roll/bap mix": { "price": 0.20, "per": 100, "unit": "g" },
+  "Baking Powder": { "price": 0.35, "per": 100, "unit": "g" },
+  "Bicarbonate of Soda": { "price": 0.28, "per": 100, "unit": "g" },
+  "Cornflour": { "price": 0.10, "per": 100, "unit": "g" },
+  "Dates": { "price": 0.25, "per": 100, "unit": "g" },
+  "Desiccated Coconut": { "price": 0.55, "per": 100, "unit": "g" },
+  "Dried Apricots": { "price": 0.50, "per": 100, "unit": "g" },
+  "Dried Fruit (other)": { "price": 0.30, "per": 100, "unit": "g" },
+  "Dried Yeast": { "price": 0.52, "per": 100, "unit": "g" },
+  "Food Colourings": { "price": 0.03, "per": 10, "unit": "ml" },
+  "Glacé Cherries": { "price": 0.50, "per": 100, "unit": "g" },
+  "Lemon Juice": { "price": 0.02, "per": 10, "unit": "ml" },
+  "Rolled Oats": { "price": 0.16, "per": 100, "unit": "g" },
+  "Vegetable Suet": { "price": 0.46, "per": 100, "unit": "g" },
+  "Stuffing Mix": { "price": 0.14, "per": 100, "unit": "g" },
+  "Suet Mix": { "price": 0.13, "per": 100, "unit": "g" },
+  "Madras Curry Powder": { "price": 0.24, "per": 10, "unit": "g" },
+  "Black Treacle": { "price": 0.18, "per": 100, "unit": "g" },
+  "Golden Syrup": { "price": 0.15, "per": 100, "unit": "g" },
+  "Sugar all types": { "price": 0.15, "per": 100, "unit": "g" },
+  "Nutmeg": { "price": 0.20, "per": 10, "unit": "g" },
+  "Clear Honey": { "price": 0.44, "per": 100, "unit": "g" },
+  "Fruit Jam/Mincemeat": { "price": 0.20, "per": 100, "unit": "g" },
+  "Lemon Curd": { "price": 0.23, "per": 100, "unit": "g" },
+  "Marmalade": { "price": 0.20, "per": 100, "unit": "g" },
+  "Cajun seasoning": { "price": 0.08, "per": 10, "unit": "g" },
+  "Coffee": { "price": 2.90, "per": 100, "unit": "g" },
+  "Jerk seasoning": { "price": 0.12, "per": 10, "unit": "g" },
+  "Butter": { "price": 1.00, "per": 100, "unit": "g" },
+  "Margarine/white fat": { "price": 0.34, "per": 100, "unit": "g" },
+  "Vegetable Oil": { "price": 0.42, "per": 100, "unit": "ml" },
+  "Evaporated milk": { "price": 0.39, "per": 100, "unit": "g" },
+  "Cheddar cheese": { "price": 0.59, "per": 100, "unit": "g" },
+  "Mozzarella": { "price": 0.52, "per": 100, "unit": "g" },
+  "Cream Cheese": { "price": 0.47, "per": 100, "unit": "g" },
+  "Crème Fraiche- Low Fat": { "price": 0.45, "per": 100, "unit": "g" },
+  "Eggs": { "price": 0.24, "per": 1, "unit": "each" },
+  "Tomato puree": { "price": 0.20, "per": 100, "unit": "g" },
+  "Tomato coulis": { "price": 0.20, "per": 100, "unit": "g" },
+  "Halloumi": { "price": 1.02, "per": 100, "unit": "g" },
+  "Mayonnaise": { "price": 0.22, "per": 100, "unit": "g" },
+  "Natural Yoghurt": { "price": 0.20, "per": 100, "unit": "g" },
+  "Parmesan Cheese": { "price": 1.80, "per": 100, "unit": "g" },
+  "Milk": { "price": 0.07, "per": 100, "unit": "ml" },
+  "Sour Cream": { "price": 0.35, "per": 100, "unit": "g" },
+  "Soya Milk": { "price": 0.16, "per": 100, "unit": "ml" },
+  "Vegan mayonnaise": { "price": 0.74, "per": 100, "unit": "g" },
+  "Apples": { "price": 0.18, "per": 100, "unit": "g" },
+  "Aubergine": { "price": 0.30, "per": 100, "unit": "g" },
+  "Beef tomato": { "price": 0.27, "per": 100, "unit": "g" },
+  "Banana (flesh only)": { "price": 0.19, "per": 100, "unit": "g" },
+  "Tomatoes": { "price": 0.16, "per": 100, "unit": "g" },
+  "Blueberries": { "price": 1.72, "per": 100, "unit": "g" },
+  "Beetroot": { "price": 0.15, "per": 100, "unit": "g" },
+  "Grapes": { "price": 0.46, "per": 100, "unit": "g" },
+  "Broccoli": { "price": 0.22, "per": 100, "unit": "g" },
+  "Carrots": { "price": 0.07, "per": 100, "unit": "g" },
+  "Kiwi fruit": { "price": 0.30, "per": 100, "unit": "g" },
+  "Cherry tomato": { "price": 0.38, "per": 100, "unit": "g" },
+  "Mango": { "price": 0.50, "per": 100, "unit": "g" },
+  "Courgettes": { "price": 0.23, "per": 100, "unit": "g" },
+  "Pears": { "price": 0.20, "per": 100, "unit": "g" },
+  "Cucumber": { "price": 0.20, "per": 100, "unit": "g" },
+  "Iceberg/mixed leaves": { "price": 0.18, "per": 100, "unit": "g" },
+  "Kale": { "price": 0.50, "per": 100, "unit": "g" },
+  "Watermelon": { "price": 0.11, "per": 100, "unit": "g" },
+  "Leeks": { "price": 0.19, "per": 100, "unit": "g" },
+  "Butternut Squash": { "price": 0.14, "per": 100, "unit": "g" },
+  "Parsnips": { "price": 0.20, "per": 100, "unit": "g" },
+  "Sugar Snaps": { "price": 0.66, "per": 100, "unit": "g" },
+  "Lettuce": { "price": 0.26, "per": 100, "unit": "g" },
+  "Mushrooms": { "price": 0.26, "per": 100, "unit": "g" },
+  "Onions": { "price": 0.09, "per": 100, "unit": "g" },
+  "Balsamic Vinegar": { "price": 0.50, "per": 100, "unit": "ml" },
+  "Peppers": { "price": 0.23, "per": 100, "unit": "g" },
+  "Chilli Cayenne": { "price": 0.10, "per": 10, "unit": "g" },
+  "Potatoes": { "price": 0.14, "per": 100, "unit": "g" },
+  "Cinnamon": { "price": 0.09, "per": 10, "unit": "g" },
+  "Spinach": { "price": 0.50, "per": 100, "unit": "g" },
+  "Cooking Salt": { "price": 0.02, "per": 10, "unit": "g" },
+  "Sweet Potato": { "price": 0.20, "per": 100, "unit": "g" },
+  "Fresh Basil/coriander": { "price": 0.30, "per": 10, "unit": "g" },
+  "Fresh Garlic": { "price": 0.12, "per": 10, "unit": "g" },
+  "Brown/white sliced bread": { "price": 0.21, "per": 100, "unit": "g" },
+  "Fresh Parsley": { "price": 0.15, "per": 100, "unit": "g" },
+  "Wrap/chapati - 10\"": { "price": 0.15, "per": 1, "unit": "each" },
+  "Grnd Black Pepper": { "price": 0.11, "per": 10, "unit": "g" },
+  "Wrap/chapati - 12\"": { "price": 0.18, "per": 1, "unit": "each" },
+  "Pitta bread": { "price": 0.12, "per": 1, "unit": "each" },
+  "Grnd White Pepper": { "price": 0.11, "per": 10, "unit": "g" },
+  "Ground Ginger": { "price": 0.09, "per": 10, "unit": "g" },
+  "Ground Mixed Spice": { "price": 0.09, "per": 10, "unit": "g" },
+  "Diced beef": { "price": 0.78, "per": 100, "unit": "g" },
+  "Ground Paprika": { "price": 0.07, "per": 10, "unit": "g" },
+  "Beef mince": { "price": 0.57, "per": 100, "unit": "g" },
+  "Chicken drumstick": { "price": 0.23, "per": 100, "unit": "g" },
+  "Mint Sauce": { "price": 0.30, "per": 100, "unit": "g" },
+  "Chicken breast fillet": { "price": 0.69, "per": 100, "unit": "g" },
+  "Mixed Herbs": { "price": 0.15, "per": 10, "unit": "g" },
+  "Diced chicken": { "price": 0.53, "per": 100, "unit": "g" },
+  "Mustard Powder": { "price": 0.22, "per": 10, "unit": "g" },
+  "Chicken thigh (boneless)": { "price": 0.60, "per": 100, "unit": "g" },
+  "Chicken mince": { "price": 0.92, "per": 100, "unit": "g" },
+  "Sweet Pickle": { "price": 0.36, "per": 100, "unit": "g" },
+  "Diced lamb": { "price": 1.08, "per": 100, "unit": "g" },
+  "Vinegar": { "price": 0.04, "per": 100, "unit": "ml" },
+  "Lamb mince": { "price": 0.68, "per": 100, "unit": "g" },
+  "Turkey fillet": { "price": 0.71, "per": 100, "unit": "g" },
+  "Diced turkey": { "price": 0.65, "per": 100, "unit": "g" },
+  "Turkey mince": { "price": 0.87, "per": 100, "unit": "g" },
+  "Tandoori seasoning": { "price": 0.08, "per": 10, "unit": "g" },
+  "Diced pork": { "price": 0.71, "per": 100, "unit": "g" },
+  "Pork mince": { "price": 0.52, "per": 100, "unit": "g" },
+  "Piri Piri seasoning": { "price": 0.12, "per": 10, "unit": "g" },
+  "Salmon": { "price": 1.80, "per": 100, "unit": "g" },
+  "Pollock": { "price": 0.89, "per": 100, "unit": "g" },
+  "Condensed milk": { "price": 0.27, "per": 100, "unit": "g" },
+  "Smoked Haddock": { "price": 1.42, "per": 100, "unit": "g" },
+  "Coconut milk": { "price": 0.21, "per": 100, "unit": "g" },
+  "Quorn Fillet": { "price": 0.75, "per": 100, "unit": "g" },
+  "Baked beans": { "price": 0.10, "per": 100, "unit": "g" },
+  "Quorn Mince": { "price": 0.71, "per": 100, "unit": "g" },
+  "Other tinned beans/pulses": { "price": 0.09, "per": 100, "unit": "g" },
+  "Tinned tomatoes": { "price": 0.09, "per": 100, "unit": "g" },
+  "Cake cases": { "price": 0.15, "per": 1, "unit": "each" },
+  "Muffin tulips": { "price": 0.27, "per": 1, "unit": "each" },
+  "Greaseproof paper": { "price": 0.02, "per": 1, "unit": "sheet" },
+  "Avocado": { "price": 1.20, "per": 100, "unit": "g" },
+  "Baby Spinach": { "price": 1.75, "per": 100, "unit": "g" },
+  "Curly Kale": { "price": 1.30, "per": 100, "unit": "g" },
+  "Butternut Pumpkin": { "price": 0.90, "per": 100, "unit": "g" },
+  "Red Cabbage": { "price": 0.45, "per": 100, "unit": "g" },
+  "Green Beans": { "price": 1.10, "per": 100, "unit": "g" },
+  "Zucchini (Courgette)": { "price": 0.80, "per": 100, "unit": "g" },
+  "Yellow Bell Pepper": { "price": 1.00, "per": 100, "unit": "g" },
+  "Orange Bell Pepper": { "price": 1.05, "per": 100, "unit": "g" },
+  "Sweetcorn": { "price": 0.55, "per": 100, "unit": "g" },
+  "Cauliflower": { "price": 0.60, "per": 100, "unit": "g" },
+  "Savoy Cabbage": { "price": 0.48, "per": 100, "unit": "g" },
+  "Baby Leek": { "price": 0.95, "per": 100, "unit": "g" },
+  "Radish": { "price": 0.65, "per": 100, "unit": "g" },
+  "Watercress": { "price": 1.40, "per": 100, "unit": "g" },
+  "Asparagus": { "price": 0.93, "per": 100, "unit": "g" }, 
+  "Fennel": { "price": 1.20, "per": 100, "unit": "g" },
+  "Rocket": { "price": 1.10, "per": 100, "unit": "g" },
+  "Celery": { "price": 0.45, "per": 100, "unit": "g" },
+  "Shiitake Mushrooms": { "price": 2.10, "per": 100, "unit": "g" },
+  "Portobello Mushrooms": { "price": 1.70, "per": 100, "unit": "g" },
+  "Pomegranate": { "price": 1.50, "per": 100, "unit": "g" },
+  "Passionfruit": { "price": 0.40, "per": 100, "unit": "g" },
+  "Raspberries": { "price": 2.80, "per": 100, "unit": "g" },
+  "Brussels Sprouts": { "price": 0.85, "per": 100, "unit": "g" },
+  "Celeriac": { "price": 0.70, "per": 100, "unit": "g" },
+  "Chard": { "price": 1.25, "per": 100, "unit": "g" },
+  "Edamame Beans": { "price": 1.80, "per": 100, "unit": "g" },
+  "Kohlrabi": { "price": 0.90, "per": 100, "unit": "g" },
+  "Papaya": { "price": 1.35, "per": 100, "unit": "g" },
+  "Peaches": { "price": 1.10, "per": 100, "unit": "g" },
+  "Plums": { "price": 1.20, "per": 100, "unit": "g" },
+  "Cherries": { "price": 2.80, "per": 100, "unit": "g" },
+  "Cranberries": { "price": 3.00, "per": 100, "unit": "g" },
+  "Gooseberries": { "price": 2.20, "per": 100, "unit": "g" },
+  "Blackberries": { "price": 2.40, "per": 100, "unit": "g" },
+  "Mulberries": { "price": 3.10, "per": 100, "unit": "g" },
+  "Rhubarb": { "price": 0.95, "per": 100, "unit": "g" },
+  "Turnip": { "price": 0.60, "per": 100, "unit": "g" },
+  "Parsnip (baby)": { "price": 1.00, "per": 100, "unit": "g" },
+  "Pumpkin Seeds": { "price": 2.50, "per": 100, "unit": "g" },
+  "Sunflower Seeds": { "price": 2.20, "per": 100, "unit": "g" },
+  "Walnuts": { "price": 3.50, "per": 100, "unit": "g" },
+  "Almonds": { "price": 3.80, "per": 100, "unit": "g" },
+  "Cashews": { "price": 4.20, "per": 100, "unit": "g" },
+  "Hazelnuts": { "price": 3.90, "per": 100, "unit": "g" },
+  "Pistachios": { "price": 4.50, "per": 100, "unit": "g" },
+  "Macadamia Nuts": { "price": 5.00, "per": 100, "unit": "g" },
+  "Pecans": { "price": 4.70, "per": 100, "unit": "g" },
+  "Brazil Nuts": { "price": 4.80, "per": 100, "unit": "g" },
+  "Chestnuts": { "price": 2.50, "per": 100, "unit": "g" },
+  "Tiger Nuts": { "price": 3.60, "per": 100, "unit": "g" },
+  "Pine Nuts": { "price": 5.20, "per": 100, "unit": "g" },
+  "Default": {"price": 1, "per": 100, "unit": "g"}
+}
+
+},{}],4:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -21,7 +324,7 @@ function giveFunctionToButton() {
   });
 }
 
-},{}],3:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
