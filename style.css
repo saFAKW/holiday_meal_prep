@@ -152,3 +152,10 @@ body {
 
 #add { background: #63bb70; }
 #skip { background: #e74c3c; }
+
+#map {
+  width: 750px;  
+  height: 750px;       
+  flex: 0 0 auto;
+  background: #e6eef6;
+}
