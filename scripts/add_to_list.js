@@ -1,4 +1,4 @@
-british_cuisine = [
+const british_cuisine = [
     "Full English Breakfast",
     "Eggs Benedict",
     "Beans on Toast",
@@ -93,10 +93,12 @@ function updateIngredientsList(fullRecipeText) {
         sheet.appendChild(noItem);
     }
 }
-export function add_ingredients_to_list(){
-    const recipeButton = document.getElementById("add");
+function add_ingredients_to_list(){
+    const recipeButton = document.getElementById("add-to-basket");
     const recipeText = document.getElementById("recipe-p");
     recipeButton.addEventListener("click", async () => {
         updateIngredientsList(recipeText.textContent);
     });
 }
+
+export {add_ingredients_to_list}
