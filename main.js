@@ -1,6 +1,6 @@
 import {getTotalNutrition, updateNutritionFacts} from "./scripts/nutrition_api"
 import { show_recipe } from "./scripts/get_recipe"
-import { add_to_basket } from "./scripts/add_to_list"
+import { add_ingredients_to_list } from "./scripts/add_to_list"
 
 import { calculateTotalCost } from "./scripts/cost_calculation";
 
@@ -16,4 +16,4 @@ console.log(total);
 })();
 */
 show_recipe();
-add_to_basket();
+add_ingredients_to_list();

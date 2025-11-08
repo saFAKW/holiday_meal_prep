@@ -1,3 +1,50 @@
+const british_cuisine = [
+    "Full English Breakfast",
+    "Eggs Benedict",
+    "Beans on Toast",
+    "Porridge",
+    "Kippers",
+    "Black Pudding",
+    "Crumpets",
+    "Bacon Sandwich (Bacon Butty)",
+    "Bubble and Squeak",
+    "Smoked Salmon & Scrambled Eggs",
+    "Ploughman’s Lunch",
+    "Fish and Chips",
+    "Cornish Pasty",
+    "Scotch Egg",
+    "Sausage Roll",
+    "Welsh Rarebit",
+    "Jacket Potato",
+    "Chicken and Leek Pie",
+    "Cottage Pie",
+    "Prawn Cocktail",
+    "Roast Beef and Yorkshire Pudding",
+    "Shepherd’s Pie",
+    "Beef Wellington",
+    "Toad in the Hole",
+    "Lamb Shank with Mint Sauce",
+    "Steak and Ale Pie",
+    "Bangers and Mash",
+    "Chicken Tikka Masala",
+    "Fish Pie",
+    "Eton Mess",
+    "Sticky Toffee Pudding",
+    "Bread and Butter Pudding",
+    "Trifle",
+    "Victoria Sponge Cake",
+    "Bakewell Tart",
+    "Spotted Dick",
+    "Apple Crumble",
+    "Banoffee Pie",
+    "Treacle Tart",
+    "Scones with Clotted Cream and Jam"
+]
+
+const counter = 0
+const current_cuisine = british_cuisine[counter]
+
+
 
 function updateIngredientsList(fullRecipeText) {
     
@@ -46,11 +93,12 @@ function updateIngredientsList(fullRecipeText) {
         sheet.appendChild(noItem);
     }
 }
-export function add_to_basket(){
-
+function add_ingredients_to_list(){
     const recipeButton = document.getElementById("add-to-basket");
     const recipeText = document.getElementById("recipe-p");
     recipeButton.addEventListener("click", async () => {
         updateIngredientsList(recipeText.textContent);
     });
 }
+
+export {add_ingredients_to_list}
