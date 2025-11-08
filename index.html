@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Global Bites</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places"></script>
 </head>
 <body>
     <div class="header">
@@ -12,10 +13,17 @@
     </div>
 
     <div class="main-container">
-        <div id="map-container">
-            <div class="content-placeholder">
-                Map Area<br>
-            </div>
+        <div id="map">
+        </div>
+    </div>
+
+    <!--
+      The `defer` attribute causes the script to execute after the full HTML
+      document has been parsed. -->
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=API_KEY&libraries=maps"
+      defer
+    ></script>
         </div>
 
         <div class="side-panel">
@@ -64,8 +72,8 @@
 
 </body>
 </html>
-    <script src="bundle.js"></script>
     <script src="popups.js"></script>
+    <script src="bundle.js"></script>
 </body>
 </html>
 
