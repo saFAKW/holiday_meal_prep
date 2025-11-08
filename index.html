@@ -32,23 +32,7 @@
 
             <input id="food" placeholder="Enter food name">
             <button onclick="getImage()">Search</button>
-
             <div id="result"></div>
-
-            <script>
-            async function getImage() {
-                const food = document.getElementById("food").value;
-                const res = await fetch(`http://127.0.0.1:5000/get_image?food=${encodeURIComponent(food)}`);
-                const data = await res.json();
-
-                if (data.url) {
-                document.getElementById("result").innerHTML =
-                    `<img src="${data.url}" alt="${food}" width="400">`;
-                } else {
-                document.getElementById("result").innerText = "No image found.";
-                }
-            }
-            </script>
             <p style="color: #7f8c8d; line-height: 1.6;">
                 Select a location on the map to view recipe details and information about the dish.
             </p>
@@ -96,5 +80,6 @@
     <script src="map.js"></script>
     <script src="bundle.js"></script>
     <script src="popups.js"></script>
+    <script src="images.js"></script>
 </body>
 
