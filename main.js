@@ -5,7 +5,7 @@ import {getTotalNutrition, updateNutritionFacts} from "./scripts/nutrition_api"
 
 /*
 (async () => {
-  const totals = await getTotalNutrition("100g eggs, 500ml milk");
+  const totals = await getTotalNutrition("100g eggs, 500ml milk", 2);
   updateNutritionFacts(totals);
 })();
 */

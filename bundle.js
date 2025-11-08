@@ -86,11 +86,11 @@ function _getNutritionFacts() {
   }));
   return _getNutritionFacts.apply(this, arguments);
 }
-function getTotalNutrition(_x2) {
+function getTotalNutrition(_x2, _x3) {
   return _getTotalNutrition.apply(this, arguments);
 }
 function _getTotalNutrition() {
-  _getTotalNutrition = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(ingredientsStr) {
+  _getTotalNutrition = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(ingredientsStr, portions) {
     var ingredients, total, _iterator, _step, item, facts, _key, key;
     return _regeneratorRuntime().wrap(function _callee2$(_context2) {
       while (1) switch (_context2.prev = _context2.next) {
@@ -144,7 +144,7 @@ function _getTotalNutrition() {
         case 21:
           // Round to 1 decimal for sanity
           for (key in total) {
-            total[key] = Math.round(total[key] * 10) / 10;
+            total[key] = Math.round(total[key] * 10) / 10 / portions;
           }
           return _context2.abrupt("return", total);
         case 23:
@@ -246,5 +246,12 @@ function updateNutritionFacts(nutrition) {
     if (dailyEl) dailyEl.textContent = dailyFormat(daily.protein);
   }
 }
+
+/* Example
+(async () => {
+  const totals = await getTotalNutrition("100g eggs, 500ml milk", 2);
+  updateNutritionFacts(totals);
+})();
+*/
 
 },{}]},{},[1]);

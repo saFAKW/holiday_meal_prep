@@ -31,7 +31,7 @@ async function getNutritionFacts(ingredient) {
 
 
 // Aggregate totals from multiple ingredients
-async function getTotalNutrition(ingredientsStr) {
+async function getTotalNutrition(ingredientsStr, portions) {
   const ingredients = ingredientsStr.split(",").map(i => i.trim()).filter(Boolean);
 
   const total = {
@@ -57,7 +57,7 @@ async function getTotalNutrition(ingredientsStr) {
 
   // Round to 1 decimal for sanity
   for (const key in total) {
-    total[key] = Math.round(total[key] * 10) / 10;
+    total[key] = Math.round(total[key] * 10) / 10 / portions;
   }
 
   return total;
@@ -145,6 +145,13 @@ function updateNutritionFacts(nutrition) {
     if (dailyEl) dailyEl.textContent = dailyFormat(daily.protein);
   }
 }
+
+/* Example
+(async () => {
+  const totals = await getTotalNutrition("100g eggs, 500ml milk", 2);
+  updateNutritionFacts(totals);
+})();
+*/
 
 
 export {getTotalNutrition, updateNutritionFacts}
