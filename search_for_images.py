@@ -1,61 +1,64 @@
-from flask import Flask, jsonify, request
-import urllib.request
-import urllib.parse
-import json
+from flask import Flask, jsonify, request, render_template
+import requests
 
 # Wikimedia Commons Image Search Functions
 
+WIKIMEDIA_API = "https://commons.wikimedia.org/w/api.php"
+USER_AGENT = "holiday_meal_prep/1.0 (your-email@example.com)"  # replace with your contact
+
 def search_commons_images(query, limit=5, namespace=None, width=800):
-    """
-    Search Wikimedia Commons and return list of image dicts.
-    If namespace=6 is passed, search is restricted to Files (images).
-    """
-    url = "https://commons.wikimedia.org/w/api.php"
     params = {
         "action": "query",
         "generator": "search",
         "gsrsearch": query,
         "gsrlimit": limit,
         "prop": "imageinfo",
-        "iiprop": "url|extmetadata",
+        "iiprop": "url|extmetadata|mime",
         "iiurlwidth": width,
-        "format": "json"
+        "format": "json",
+        "formatversion": 2
     }
     if namespace is not None:
         params["gsrnamespace"] = namespace
 
+    headers = {"User-Agent": USER_AGENT}
     try:
-        # Encode and send request
-        full_url = f"{url}?{urllib.parse.urlencode(params)}"
-        with urllib.request.urlopen(full_url, timeout=8) as response:
-            data = json.loads(response.read().decode())
+        resp = requests.get(WIKIMEDIA_API, params=params, headers=headers, timeout=10)
+        resp.raise_for_status()
+        data = resp.json()
     except Exception as e:
-        print("Error fetching from Wikimedia:", e)
+        print("Wikimedia request error:", e)
         return []
 
-    pages = data.get("query", {}).get("pages", {})
+    pages = data.get("query", {}).get("pages", [])
     results = []
-    for page in pages.values():
-        info = page.get("imageinfo", [{}])[0]
+    for page in pages:
+        imageinfo_list = page.get("imageinfo")
+        if not imageinfo_list:
+            # skip pages that have no imageinfo (common for non-file pages)
+            continue
+        info = imageinfo_list[0] or {}
+        url = info.get("thumburl") or info.get("url")
+        if not url:
+            continue
+        extmeta = info.get("extmetadata") or {}
+        license_name = extmeta.get("LicenseShortName", {}).get("value") if extmeta.get("LicenseShortName") else None
+        artist = extmeta.get("Artist", {}).get("value") if extmeta.get("Artist") else None
         results.append({
+            "pageid": page.get("pageid"),
             "title": page.get("title"),
-            "url": info.get("thumburl") or info.get("url"),
-            "license": info.get("extmetadata", {}).get("LicenseShortName", {}).get("value"),
-            "artist": info.get("extmetadata", {}).get("Artist", {}).get("value"),
-            "extmetadata": info.get("extmetadata", {})
+            "url": url,
+            "mime": info.get("mime"),
+            "license": license_name,
+            "artist": artist
         })
     return results
 
 
 def get_commons_image_for_food(food):
-    """
-    Return a single best image dict for the given food name (or None).
-    Tries several query variations and restricts search to File namespace.
-    """
     if not food or not food.strip():
         return None
 
-    # query variations to improve chances
     queries = [
         food,
         f"{food} dish",
@@ -64,35 +67,40 @@ def get_commons_image_for_food(food):
         f"{food} food"
     ]
 
-    # Try restricted namespace (images only)
+    # preferred: search File namespace (6) to get file pages
     for q in queries:
         results = search_commons_images(q, limit=5, namespace=6, width=800)
         for r in results:
-            url = r.get("url")
-            if url and any(url.lower().endswith(ext) for ext in (".jpg", ".jpeg", ".png", ".gif", ".svg")):
+            if r.get("url"):
                 return r
 
-    # Fallback: broader search without namespace restriction
+    # fallback: broader search
     for q in queries:
         results = search_commons_images(q, limit=3, namespace=None, width=800)
         for r in results:
-            url = r.get("url")
-            if url and any(url.lower().endswith(ext) for ext in (".jpg", ".jpeg", ".png", ".gif", ".svg")):
+            if r.get("url"):
                 return r
 
     return None
 
 
 # Flask Web API
-app = Flask(__name__)
+app = Flask(__name__, template_folder="templates", static_folder="static")
+
+@app.route("/")
+def index():
+    return render_template("index.html")
 
 @app.route("/get_image")
 def get_image():
-    food = request.args.get("food")
+    food = request.args.get("food", "").strip()
+    if not food:
+        return jsonify({"error": "missing 'food' parameter"}), 400
     image = get_commons_image_for_food(food)
-    return jsonify(image or {})
+    if not image:
+        return jsonify({"error": "no image found"}), 404
+    return jsonify(image)
 
 
 if __name__ == "__main__":
-    # Run the Flask app locally
     app.run(debug=True)
