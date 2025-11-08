@@ -4,7 +4,7 @@ import requests
 # Wikimedia Commons Image Search Functions
 
 WIKIMEDIA_API = "https://commons.wikimedia.org/w/api.php"
-USER_AGENT = "holiday_meal_prep/1.0 (your-email@example.com)"  # replace with your contact
+USER_AGENT = "holiday_meal_prep/1.0"
 
 def search_commons_images(query, limit=5, namespace=None, width=800):
     params = {
