@@ -138,6 +138,13 @@ body {
     text-align: center;
 }
 
+.button-container {
+  display: flex;
+  justify-content: right;  /* center horizontally */
+  align-items: center;
+  gap: 10px;                /* space between buttons */
+}
+
 #add, #skip {
   display: inline-flex; /* inline + flexbox centering */
   align-items: center;

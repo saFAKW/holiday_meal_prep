@@ -25,28 +25,33 @@
 
         <div class="side-panel">
             <h2>Recipe Details</h2>
-            <button id="add">add to basket</button>
-            <div style="margin-bottom: 15px;">
-                <label for="food-name-input" style="display: block; margin-bottom: 5px; color: #333;">Enter Food Name:</label>
-                <input type="text" id="food-name-input" placeholder="e.g., Apple Pie" style="width: 90%; padding: 8px;">
-                <button id="get-recipe-btn" style="padding: 8px 12px; margin-top: 10px;">Get Recipe</button>
+            <div class="button-container">
+                <button id="add">Add</button>
+                <button id="skip">Skip</button>
             </div>
-            <p id="recipe-p" style="color: #7f8c8d; line-height: 1.6;">
-                Select a location on the map to view recipe details and information about the dish.
-            </p>
+
+            <div style="margin-bottom: 15px;">
+                <label id="title" for="food-name-input" style="display: block; margin-bottom: 5px; color: #333;">Food Name Here</label>
+            </div>
 
             <input id="food" placeholder="Enter food name">
             <button onclick="getImage()">Search</button>
             <br>
             <div id="result"></div>
+
             <div style="margin-top: 30px;">
-                <h3 style="color: #34495e; margin-bottom: 15px;">"recipe name goes here"</h3>
                 <div class="ingredient-item">
-                    <strong>Ingredients:</strong> -
+                    <strong>Ingredients:</strong>
+                    <p id="ingredients-p" style="color: #7f8c8d; line-height: 1.6;">
+                        (ingredients goes here)
+                    </p>
                 </div>
-                <div class="ingredient-item">
-                    <strong>Recipe:</strong> -
-            </div>
+                <div class="ingredient-item" id="recipe-p">
+                    <strong>Recipe:</strong>
+                    <p id="recipe-p" style="color: #7f8c8d; line-height: 1.6;">
+                        (recipe goes here)
+                    </p>
+                </div>
         </div>
     </div>
 

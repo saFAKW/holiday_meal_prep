@@ -39,15 +39,15 @@ const british_cuisine = [
     "Banoffee Pie",
     "Treacle Tart",
     "Scones with Clotted Cream and Jam"
-]
+];
 
-const counter = 0
-const current_cuisine = british_cuisine[counter]
+// make counter mutable
+let counter = 0;
 
-
+// set the current cuisine
+let current_cuisine = british_cuisine[counter];
 
 function updateIngredientsList(fullRecipeText) {
-    
     const sheet = document.getElementById("ingredientsSheet");
     if (!sheet) {
         console.error("error getElementById");
@@ -67,25 +67,22 @@ function updateIngredientsList(fullRecipeText) {
     }
 
     const ingredientsBlock = fullRecipeText.substring(startIndex + "Ingredients:".length, endIndex).trim();
-    
     const ingredientLines = ingredientsBlock.split('- ');
-    
     let ingredientsFound = 0;
 
     for (const line of ingredientLines) {
         const trimmedLine = line.trim();
-            if (trimmedLine) {
-                console.log(`trimmedLine ${trimmedLine}`)
-                ingredientsFound++;
-                
-                const newItem = document.createElement("div");
-                newItem.className = "ingredient-item";
-                newItem.innerHTML = `<strong>${trimmedLine}</strong>`;
-                                        
-                sheet.appendChild(newItem);
-            }
+        if (trimmedLine) {
+            console.log(`trimmedLine ${trimmedLine}`);
+            ingredientsFound++;
+
+            const newItem = document.createElement("div");
+            newItem.className = "ingredient-item";
+            newItem.innerHTML = `<strong>${trimmedLine}</strong>`;
+            sheet.appendChild(newItem);
+        }
     }
-    
+
     if (ingredientsFound === 0) {
         const noItem = document.createElement("div");
         noItem.className = "ingredient-item";
@@ -93,12 +90,36 @@ function updateIngredientsList(fullRecipeText) {
         sheet.appendChild(noItem);
     }
 }
-function add_ingredients_to_list(){
-    const recipeButton = document.getElementById("add-to-basket");
+
+function add_ingredients_to_list() {
+    const recipeButton = document.getElementById("add");
     const recipeText = document.getElementById("recipe-p");
+
+    if (!recipeButton || !recipeText) {
+        console.error("Missing required elements");
+        return;
+    }
+
+    // ✅ Set the first recipe automatically on load
+    recipeText.textContent = current_cuisine;
+
     recipeButton.addEventListener("click", async () => {
+        // Update list with current recipe
         updateIngredientsList(recipeText.textContent);
+
+        // Move to the next cuisine
+        counter++;
+        if (counter >= british_cuisine.length) {
+            counter = 0; // loop back to start
+        }
+
+        // Set the new current recipe
+        current_cuisine = british_cuisine[counter];
+        recipeText.textContent = current_cuisine;
     });
 }
 
-export {add_ingredients_to_list}
+// ✅ Start automatically when page loads
+window.addEventListener("DOMContentLoaded", add_ingredients_to_list);
+
+export { add_ingredients_to_list };
