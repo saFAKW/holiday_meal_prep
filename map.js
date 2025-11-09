@@ -1,4 +1,3 @@
-// Initialize the map at world view
 const map = L.map('map').setView([20, 0], 2);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -7,23 +6,28 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 let currentMarker = null;
 
-// Mapping some country names to ThemealDB areas (needed to get results)
+// Mapping ThemealDB areas
 const countryToThemealDB = {
     "United States": "American",
     "United Kingdom": "British",
     "Russia": "Russian",
-    "South Korea": "Korean",
-    "North Korea": "Korean",
-    "Viet Nam": "Vietnamese",
-    "Iran": "Iranian",
-    "Egypt": "Egyptian",
+    "France": "French",
+    "Italy": "Italian",
+    "Spain": "Spanish",
+    "Germany": "German",
+    "Mexico": "Mexican",
+    "India": "Indian",
+    "China": "Chinese",
+    "Japan": "Japanese",
     "Morocco": "Moroccan",
-    // Add more mappings if needed
+    "Thailand": "Thai",
+    "Canada": "Canadian",
+    "Vietnam": "Vietnamese"
 };
 
+// ---------- MAP CLICK ----------
 map.on('click', async function(e) {
     if (currentMarker) map.removeLayer(currentMarker);
-
     currentMarker = L.marker(e.latlng).addTo(map);
 
     const country = await getCountryFromLatLng(e.latlng.lat, e.latlng.lng);
@@ -32,11 +36,9 @@ map.on('click', async function(e) {
         return;
     }
 
-    const area = countryToThemealDB[country] || country; // fallback to country name
-
+    const area = countryToThemealDB[country] || country;
     document.getElementById("title").textContent = `Dishes from ${country}`;
-
-    fetchDishes(area);
+    fetchDishes(area, country);
 });
 
 async function getCountryFromLatLng(lat, lng) {
@@ -50,27 +52,26 @@ async function getCountryFromLatLng(lat, lng) {
     }
 }
 
-async function fetchDishes(area) {
+// ---------- FETCH DISHES ----------
+async function fetchDishes(area, country) {
     const resultDiv = document.getElementById("result");
     resultDiv.innerHTML = "<p>Loading dishes...</p>";
 
     try {
-        const res = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?a=${encodeURIComponent(area)}`);
+        const res = await fetch(`http://127.0.0.1:5000/get_dishes?area=${encodeURIComponent(area)}`);
         const data = await res.json();
 
         if (!data.meals) {
-            resultDiv.innerHTML = `<p>No dishes found for this country (${area}).</p>`;
+            resultDiv.innerHTML = `<p>No dishes found for ${country} (${area}).</p>`;
             return;
         }
 
         resultDiv.innerHTML = "";
-
         for (const meal of data.meals) {
-            // Get image from your local Flask service for better results
             const imgRes = await fetch(`http://127.0.0.1:5000/get_image?food=${encodeURIComponent(meal.strMeal)}`);
-            const imgData = await imgRes.json();
+            const imgData = await imgRes.json().catch(() => ({}));
+            const imgUrl = imgData.url || meal.strMealThumb;
 
-            // Create meal card
             const card = document.createElement("div");
             card.className = "meal-card";
             card.style.border = "1px solid #ccc";
@@ -82,7 +83,7 @@ async function fetchDishes(area) {
             card.style.alignItems = "center";
 
             card.innerHTML = `
-                <img src="${imgData.url || meal.strMealThumb}" alt="${meal.strMeal}" width="120" style="border-radius: 6px;">
+                <img src="${imgUrl}" alt="${meal.strMeal}" width="120" style="border-radius:6px;">
                 <div style="flex-grow:1">
                     <h3 style="margin:0 0 5px 0;">${meal.strMeal}</h3>
                     <button class="wishlist-btn" style="background:#57c785; border:none; padding:6px 10px; border-radius:4px; color:white; cursor:pointer;">
@@ -94,11 +95,11 @@ async function fetchDishes(area) {
             resultDiv.appendChild(card);
 
             card.querySelector(".wishlist-btn").addEventListener("click", () => {
-                addToWishlist(meal.strMeal, imgData.url || meal.strMealThumb);
+                addToWishlist(meal.strMeal, imgUrl, country);
             });
         }
     } catch (err) {
         console.error(err);
-        resultDiv.innerHTML = "<p>Error fetching dishes.</p>";
+        resultDiv.innerHTML = "<p style='color:red;'>Error fetching dishes.</p>";
     }
 }

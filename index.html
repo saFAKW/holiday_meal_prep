@@ -21,6 +21,16 @@
             <img class = "globe" src="https://upload.wikimedia.org/wikipedia/commons/6/6b/Rotating_globe.gif"> 
             Global Bites
         </h1>
+        <div id="culture-points">
+            🌍<span id="points-count">0</span> Culture Points
+        </div>
+        <!-- Achievement Board (initially hidden) -->
+        <div id="achievement-board">
+            <h3>🌏 Your Achievements</h3>
+            <ul id="completed-countries-list"></ul>
+            <p id="achievement-msg" style="font-style:italic;color:#2c3e50;"></p>
+        </div>
+
     </div>
     <div class="main-container">
         <div id="map"></div>
@@ -33,8 +43,12 @@
             <div id="meal-cards-container" class="meal-cards-container">
                 <!-- Meal cards will be dynamically added here -->
             </div>
-            <div id="result"></div>
-
+            <div class="side-panel">
+                <h2>Recipe Details</h2>
+                <div id="title" style="margin-bottom: 10px;">Select a country on the map</div>
+                <div id="result"></div>
+            </div>
+        </div>
 
 
 </body>
