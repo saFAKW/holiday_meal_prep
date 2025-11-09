@@ -226,12 +226,12 @@ html,body{
 }
 
 @keyframes spline-3-keys{
-    0% {transform: translate(65%, -5%);}
-    50% {transform: translate(65%, -5%);}
-    55% {transform: translate(32%, -5%);}
-    75% {transform: translate(32%, -5%);}
-    80% {transform: translate(65%, -5%);}
-    100% {transform: translate(65%, -5%);}
+    0% {transform: translate(65%, -8%);}
+    50% {transform: translate(65%, -8%);}
+    55% {transform: translate(32%, -8%);}
+    75% {transform: translate(32%, -8%);}
+    80% {transform: translate(65%, -8%);}
+    100% {transform: translate(65%, -8%);}
 }
 
 .spline.spline-4{
@@ -251,4 +251,9 @@ hr.green {
     border:none;
   border-top: 6px solid rgba(87, 199, 133, 1);
   margin-top: 20px;
+}
+
+#food-image{
+  max-height: 500px;
+  width: auto;
 }
