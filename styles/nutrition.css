@@ -257,3 +257,10 @@ hr.green {
   max-height: 500px;
   width: auto;
 }
+
+#total-cost, #total-time{
+  background-color: rgba(87, 199, 133, 1);
+  color:white;
+  padding: 5px;
+  margin-top:5px;
+}

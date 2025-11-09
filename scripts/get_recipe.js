@@ -1,3 +1,4 @@
+import { calculateTime, calculateTotalCost } from './cost_calculation.js';
 import { callGeminiApi } from './gemini.js';
 
 const british_cuisine = [
@@ -78,7 +79,8 @@ export async function show_recipe(){
     
     // Update title first, then use it for the prompt
     title.innerHTML = current_cuisine;
-    const prompt = `Please provide a simple recipe for ${current_cuisine} ${PROMPT}`;
+    const portions = document.getElementById("portions").value
+    const prompt = `Provide a simple recipe for ${portions} poritions for ${current_cuisine} ${PROMPT}`;
     
     const recipe = await callGeminiApi(prompt);
     if(!recipe || recipe.startsWith("error")){    
@@ -95,6 +97,11 @@ export async function show_recipe(){
     const recipes_styled = markdownStyling(parts[1]);
     ingredientDisplay.innerHTML = ingredients_styled;
     recipeDisplay.innerHTML = recipes_styled || "";
+    const total_time = calculateTime(recipe_list)
+    document.querySelector("#total-time").querySelector(".value").textContent = total_time
+    const total_cost = calculateTotalCost(recipe_list)
+    document.querySelector("#total-cost").querySelector(".value").textContent = total_cost
+
 }; 
 
 function markdownStyling(input) {
