@@ -116,13 +116,11 @@ function add_ingredients_to_list() {
 /*skip button functionality*/
     skipButton.addEventListener("click", async () => {
         alert("skipped")
-        console.log("click add to basket")
         show_recipe()
         current_cuisine = british_cuisine[counter];
         recipeText.textContent = current_cuisine;
     });
     counter++
 }
-
 
 export { add_ingredients_to_list };
