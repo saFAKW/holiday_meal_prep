@@ -1,160 +1,104 @@
-// const map = L.map('map').setView([0, 0], 13);
-
-// L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-// maxZoom: 19,
-// attribution: '&copy; OpenStreetMap contributors'
-// }).addTo(map);
-
-// if (navigator.geolocation) {
-// navigator.geolocation.getCurrentPosition(success, error);
-// } else {
-// alert("Geolocation is not supported by this browser.");
-// }
-
-// function success(position) {
-// const lat = position.coords.latitude;
-// const lon = position.coords.longitude;
-// map.setView([lat, lon], 15);
-
-// L.marker([lat, lon])
-//     .addTo(map)
-//     .bindPopup(`<b class="here">You are here</b>`)
-//     .openPopup();
-
-// const overpassUrl = `https://overpass-api.de/api/interpreter?data=[out:json];node(around:2000,${lat},${lon})["shop"="supermarket"];out;`;
-
-// fetch(overpassUrl)
-//     .then(response => response.json())
-//     .then(data => {
-//     data.elements.forEach(el => {
-//         if (el.lat && el.lon) {
-//         const name = el.tags.name || "Unnamed supermarket";
-//         const website = el.tags.website || el.tags.url;
-
-//         // Popup text: name + website link if available
-//         let popupText = `<b>${name}</b>`;
-//         if (website) {
-//                   popupText += `<br><a href="${website}" target="_blank">Visit website</a>`;
-//                   if (name == "Co-op Food"){
-//                     popupText += `<br><a href="https://shop.coop.co.uk/fruit-and-veg-deals" target="_blank"> <img class="deal" src = "https://images.ctfassets.net/5hwhsiyaz6z8/1onCTW7h4io9GQYXs18UdX/e579e095e1852fb9a9b66062df189d40/Fresh_3_-_2046_x_1150_px.png"><a>`
-//                   }
-//                   else if (name == "Morrisons"){
-//                     popupText += `<br><a href="https://groceries.morrisons.com/promotions?srsltid=AfmBOorSaj4ZoAHam0g3T5jcT_xbq936Z56CWJLkLuOPSl6VxnfHiquQ" target="_blank"> <img class="deal" src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwdwtcrN-cXY-P_GqfKXV6n3Gb1bvXi-3zxw&s"></a>`
-//                   }
-//                 }
-
-
-//         L.marker([el.lat, el.lon])
-//             .addTo(map)
-//             .bindPopup(popupText);
-//         }
-//     });
-//     })
-//     .catch(err => console.error("Error fetching supermarkets:", err));
-// }
-
-// function error() {
-// alert("Unable to retrieve your location.");
-// }
-// Initialize map centered on world
+// Initialize the map at world view
 const map = L.map('map').setView([20, 0], 2);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
     attribution: '&copy; OpenStreetMap contributors'
 }).addTo(map);
 
-let supermarketLayer = L.layerGroup().addTo(map);
+let currentMarker = null;
 
-// Try to get user's location
-if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(success, error);
-} else {
-    alert("Geolocation is not supported by this browser.");
-}
+// Mapping some country names to ThemealDB areas (needed to get results)
+const countryToThemealDB = {
+    "United States": "American",
+    "United Kingdom": "British",
+    "Russia": "Russian",
+    "South Korea": "Korean",
+    "North Korea": "Korean",
+    "Viet Nam": "Vietnamese",
+    "Iran": "Iranian",
+    "Egypt": "Egyptian",
+    "Morocco": "Moroccan",
+    // Add more mappings if needed
+};
 
-function success(position) {
-    const lat = position.coords.latitude;
-    const lon = position.coords.longitude;
+map.on('click', async function(e) {
+    if (currentMarker) map.removeLayer(currentMarker);
 
-    // Center map to user’s location
-    map.setView([lat, lon], 13);
+    currentMarker = L.marker(e.latlng).addTo(map);
 
-    // Add user marker
-    L.marker([lat, lon])
-        .addTo(map)
-        .bindPopup(`<b class="here">You are here</b>`)
-        .openPopup();
-}
+    const country = await getCountryFromLatLng(e.latlng.lat, e.latlng.lng);
+    if (!country) {
+        alert("Could not detect country at this location.");
+        return;
+    }
 
-// Handle geolocation errors
-function error() {
-    console.warn("Unable to retrieve location — showing global map.");
-}
+    const area = countryToThemealDB[country] || country; // fallback to country name
 
-// Fetch supermarkets for current visible map area
-async function fetchSupermarketsInView() {
-    const bounds = map.getBounds();
-    const south = bounds.getSouth();
-    const west = bounds.getWest();
-    const north = bounds.getNorth();
-    const east = bounds.getEast();
+    document.getElementById("title").textContent = `Dishes from ${country}`;
 
-    // Overpass query for supermarkets in bounding box
-    const overpassUrl = `https://overpass-api.de/api/interpreter?data=[out:json][timeout:25];
-        (
-          node["shop"="supermarket"](${south},${west},${north},${east});
-          way["shop"="supermarket"](${south},${west},${north},${east});
-          relation["shop"="supermarket"](${south},${west},${north},${east});
-        );
-        out center;`;
+    fetchDishes(area);
+});
 
+async function getCountryFromLatLng(lat, lng) {
     try {
-        const response = await fetch(overpassUrl);
-        const data = await response.json();
-
-        // Clear old markers
-        supermarketLayer.clearLayers();
-
-        // Add markers for supermarkets
-        data.elements.forEach(el => {
-            const lat = el.lat || (el.center && el.center.lat);
-            const lon = el.lon || (el.center && el.center.lon);
-            if (!lat || !lon) return;
-
-            const name = el.tags?.name || "Unnamed supermarket";
-            const website = el.tags?.website || el.tags?.url;
-
-            // Build popup content
-            let popupText = `<b>${name}</b>`;
-            if (website) {
-                popupText += `<br><a href="${website}" target="_blank">Visit website</a>`;
-            }
-
-            // Add custom deals for specific chains
-            if (name.includes("Co-op")) {
-                popupText += `<br><a href="https://shop.coop.co.uk/fruit-and-veg-deals" target="_blank">
-                    <img class="deal" src="https://images.ctfassets.net/5hwhsiyaz6z8/1onCTW7h4io9GQYXs18UdX/e579e095e1852fb9a9b66062df189d40/Fresh_3_-_2046_x_1150_px.png" width="150">
-                </a>`;
-            } else if (name.includes("Morrisons")) {
-                popupText += `<br><a href="https://groceries.morrisons.com/promotions?srsltid=AfmBOorSaj4ZoAHam0g3T5jcT_xbq936Z56CWJLkLuOPSl6VxnfHiquQ" target="_blank">
-                    <img class="deal" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwdwtcrN-cXY-P_GqfKXV6n3Gb1bvXi-3zxw&s" width="150">
-                </a>`;
-            }
-
-            L.marker([lat, lon])
-                .addTo(supermarketLayer)
-                .bindPopup(popupText);
-        });
-
-        console.log(`Loaded ${data.elements.length} supermarkets in current view`);
+        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
+        const data = await res.json();
+        return data.address.country;
     } catch (err) {
-        console.error("Error fetching supermarkets:", err);
+        console.error(err);
+        return null;
     }
 }
 
-// Fetch supermarkets whenever map movement ends
-map.on("moveend", fetchSupermarketsInView);
+async function fetchDishes(area) {
+    const resultDiv = document.getElementById("result");
+    resultDiv.innerHTML = "<p>Loading dishes...</p>";
 
-// Initial load
-fetchSupermarketsInView();
+    try {
+        const res = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?a=${encodeURIComponent(area)}`);
+        const data = await res.json();
+
+        if (!data.meals) {
+            resultDiv.innerHTML = `<p>No dishes found for this country (${area}).</p>`;
+            return;
+        }
+
+        resultDiv.innerHTML = "";
+
+        for (const meal of data.meals) {
+            // Get image from your local Flask service for better results
+            const imgRes = await fetch(`http://127.0.0.1:5000/get_image?food=${encodeURIComponent(meal.strMeal)}`);
+            const imgData = await imgRes.json();
+
+            // Create meal card
+            const card = document.createElement("div");
+            card.className = "meal-card";
+            card.style.border = "1px solid #ccc";
+            card.style.borderRadius = "8px";
+            card.style.padding = "10px";
+            card.style.marginBottom = "10px";
+            card.style.display = "flex";
+            card.style.gap = "10px";
+            card.style.alignItems = "center";
+
+            card.innerHTML = `
+                <img src="${imgData.url || meal.strMealThumb}" alt="${meal.strMeal}" width="120" style="border-radius: 6px;">
+                <div style="flex-grow:1">
+                    <h3 style="margin:0 0 5px 0;">${meal.strMeal}</h3>
+                    <button class="wishlist-btn" style="background:#57c785; border:none; padding:6px 10px; border-radius:4px; color:white; cursor:pointer;">
+                        Add to Wishlist
+                    </button>
+                </div>
+            `;
+
+            resultDiv.appendChild(card);
+
+            card.querySelector(".wishlist-btn").addEventListener("click", () => {
+                addToWishlist(meal.strMeal, imgData.url || meal.strMealThumb);
+            });
+        }
+    } catch (err) {
+        console.error(err);
+        resultDiv.innerHTML = "<p>Error fetching dishes.</p>";
+    }
+}
