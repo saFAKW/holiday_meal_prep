@@ -1,5 +1,5 @@
 async function getImage() {
-    const food = document.getElementById("food").value;
+    const food = document.getElementById("food").textContent.trim();
     const res = await fetch(`http://127.0.0.1:5000/get_image?food=${encodeURIComponent(food)}`);
     const data = await res.json();
 
