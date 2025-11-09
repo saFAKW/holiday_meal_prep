@@ -1,8 +1,18 @@
-const apikey = "44058cdda3c9b47d8199476afe630d5b"
-const appid = "f4dac682"
+const ED_apikey = "44058cdda3c9b47d8199476afe630d5b"
+const ED_appid = "f4dac682"
+const ED_apikey2 = "62b677ce52ffdbd9df71f795cd290513"
+const ED_appid2 = "a86a5d3b"
+const ED_apikey3 = "35b4e7731ad11d8057ac13f071a3bb65"
+const ED_appid3 = "dce4808c"
+const ED_apikey4 = "92d5475bcf17d4340a538aa770b2f206"
+const ED_appid4 = "7db14b31"
+const ED_apikey5 = "b6f6357af10e5776a5af294dd86fcda3"
+const ED_appid5 = "cb2758a4"
+const ED_apikey6 = "cf5b3d027dbef78e31bce528632c9def"
+const ED_appid6 = "2c951abb"
 
 async function getNutritionFacts(ingredient) {
-  const url = `https://api.edamam.com/api/nutrition-data?app_id=${appid}&app_key=${apikey}&nutrition-type=cooking&ingr=${encodeURIComponent(ingredient)}`;
+  const url = `https://api.edamam.com/api/nutrition-data?app_id=${ED_appid}&app_key=${ED_apikey}&nutrition-type=cooking&ingr=${encodeURIComponent(ingredient)}`;
 
   const response = await fetch(url);
   const data = await response.json();

@@ -1,5 +1,6 @@
 import { calculateTime, calculateTotalCost } from './cost_calculation.js';
 import { callGeminiApi } from './gemini.js';
+import { updateNutritionFacts } from './nutrition_api.js';
 
 const british_cuisine = [
     "Beans on Toast",
@@ -101,7 +102,7 @@ export async function show_recipe(){
     document.querySelector("#total-time").querySelector(".value").textContent = total_time
     const total_cost = calculateTotalCost(recipe_list)
     document.querySelector("#total-cost").querySelector(".value").textContent = total_cost
-
+    updateNutritionFacts(recipe_list, portions)
 }; 
 
 function markdownStyling(input) {

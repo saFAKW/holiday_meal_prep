@@ -46,11 +46,11 @@ function calculateTotalCost(ingredientStr) {
       const converted = convertUnit(ing.amount, ing.unit, costEntry.unit);
       if (converted !== null) amountInCostUnit = converted;
       else { // unit not identifiable, set £1
-        totalCost += 1;
+        totalCost += 0.75;
         continue;
       }
     } else if (!ing.unit) { // missing unit, set £1
-      totalCost += 1;
+      totalCost += 0.75;
       continue;
     }
 

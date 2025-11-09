@@ -9,14 +9,6 @@ var _bubbles = require("./scripts/bubbles");
 var total = (0, _cost_calculation.calculateTotalCost)("100ml Milk, 50 g Eggs, 50 ml Goat Milk, 100 g Pistachios");
 console.log(total);
 
-//giveFunctionToButton()
-
-/*
-(async () => {
-  const totals = await getTotalNutrition("100g eggs, 500ml milk", 2);
-  updateNutritionFacts(totals);
-})();
-*/
 (0, _get_recipe.show_recipe)();
 (0, _add_to_list.add_ingredients_to_list)();
 
@@ -629,9 +621,458 @@ var current_cuisine = british_cuisine[counter];
 function show_recipe() {
   return _show_recipe.apply(this, arguments);
 }
+const costs = {
+  "Basmati Rice": { "price": 0.20, "per": 100, "unit": "g" },
+  "Brown/Long Grain Rice": { "price": 0.15, "per": 100, "unit": "g" },
+  "Orzo": { "price": 0.15, "per": 100, "unit": "g" },
+  "Quinoa": { "price": 0.36, "per": 100, "unit": "g" },
+  "Cous Cous": { "price": 0.32, "per": 100, "unit": "g" },
+  "Lasagne sheets": { "price": 0.35, "per": 100, "unit": "g" },
+  "Lentils Red/Green": { "price": 0.23, "per": 100, "unit": "g" },
+  "Noodles": { "price": 0.50, "per": 100, "unit": "g" },
+  "Pasta Dried-Various": { "price": 0.23, "per": 100, "unit": "g" },
+  "Pudding Rice": { "price": 0.31, "per": 100, "unit": "g" },
+  "Strawberries": { "price": 0.50, "per": 100, "unit": "g" },
+  "Strong flour": { "price": 0.08, "per": 100, "unit": "g" },
+  "Gluten free flour": { "price": 0.60, "per": 100, "unit": "g" },
+  "Polenta flour": { "price": 0.17, "per": 100, "unit": "g" },
+  "Bread roll/bap mix": { "price": 0.20, "per": 100, "unit": "g" },
+  "Baking Powder": { "price": 0.35, "per": 100, "unit": "g" },
+  "Bicarbonate of Soda": { "price": 0.28, "per": 100, "unit": "g" },
+  "Cornflour": { "price": 0.10, "per": 100, "unit": "g" },
+  "Dates": { "price": 0.25, "per": 100, "unit": "g" },
+  "Desiccated Coconut": { "price": 0.55, "per": 100, "unit": "g" },
+  "Dried Apricots": { "price": 0.50, "per": 100, "unit": "g" },
+  "Dried Fruit (other)": { "price": 0.30, "per": 100, "unit": "g" },
+  "Dried Yeast": { "price": 0.52, "per": 100, "unit": "g" },
+  "Food Colourings": { "price": 0.03, "per": 10, "unit": "ml" },
+  "Glacé Cherries": { "price": 0.50, "per": 100, "unit": "g" },
+  "Lemon Juice": { "price": 0.02, "per": 10, "unit": "ml" },
+  "Rolled Oats": { "price": 0.16, "per": 100, "unit": "g" },
+  "Vegetable Suet": { "price": 0.46, "per": 100, "unit": "g" },
+  "Stuffing Mix": { "price": 0.14, "per": 100, "unit": "g" },
+  "Suet Mix": { "price": 0.13, "per": 100, "unit": "g" },
+  "Madras Curry Powder": { "price": 0.24, "per": 10, "unit": "g" },
+  "Black Treacle": { "price": 0.18, "per": 100, "unit": "g" },
+  "Golden Syrup": { "price": 0.15, "per": 100, "unit": "g" },
+  "Sugar all types": { "price": 0.15, "per": 100, "unit": "g" },
+  "Nutmeg": { "price": 0.20, "per": 10, "unit": "g" },
+  "Clear Honey": { "price": 0.44, "per": 100, "unit": "g" },
+  "Fruit Jam/Mincemeat": { "price": 0.20, "per": 100, "unit": "g" },
+  "Lemon Curd": { "price": 0.23, "per": 100, "unit": "g" },
+  "Marmalade": { "price": 0.20, "per": 100, "unit": "g" },
+  "Cajun seasoning": { "price": 0.08, "per": 10, "unit": "g" },
+  "Coffee": { "price": 2.90, "per": 100, "unit": "g" },
+  "Jerk seasoning": { "price": 0.12, "per": 10, "unit": "g" },
+  "Butter": { "price": 1.00, "per": 100, "unit": "g" },
+  "Margarine/white fat": { "price": 0.34, "per": 100, "unit": "g" },
+  "Vegetable Oil": { "price": 0.42, "per": 100, "unit": "ml" },
+  "Evaporated milk": { "price": 0.39, "per": 100, "unit": "g" },
+  "Cheddar cheese": { "price": 0.59, "per": 100, "unit": "g" },
+  "Mozzarella": { "price": 0.52, "per": 100, "unit": "g" },
+  "Cream Cheese": { "price": 0.47, "per": 100, "unit": "g" },
+  "Crème Fraiche- Low Fat": { "price": 0.45, "per": 100, "unit": "g" },
+  "Eggs": { "price": 0.24, "per": 1, "unit": "each" },
+  "Tomato puree": { "price": 0.20, "per": 100, "unit": "g" },
+  "Tomato coulis": { "price": 0.20, "per": 100, "unit": "g" },
+  "Halloumi": { "price": 1.02, "per": 100, "unit": "g" },
+  "Mayonnaise": { "price": 0.22, "per": 100, "unit": "g" },
+  "Natural Yoghurt": { "price": 0.20, "per": 100, "unit": "g" },
+  "Parmesan Cheese": { "price": 1.80, "per": 100, "unit": "g" },
+  "Milk": { "price": 0.07, "per": 100, "unit": "ml" },
+  "Sour Cream": { "price": 0.35, "per": 100, "unit": "g" },
+  "Soya Milk": { "price": 0.16, "per": 100, "unit": "ml" },
+  "Vegan mayonnaise": { "price": 0.74, "per": 100, "unit": "g" },
+  "Apples": { "price": 0.18, "per": 100, "unit": "g" },
+  "Aubergine": { "price": 0.30, "per": 100, "unit": "g" },
+  "Beef tomato": { "price": 0.27, "per": 100, "unit": "g" },
+  "Banana (flesh only)": { "price": 0.19, "per": 100, "unit": "g" },
+  "Tomatoes": { "price": 0.16, "per": 100, "unit": "g" },
+  "Blueberries": { "price": 1.72, "per": 100, "unit": "g" },
+  "Beetroot": { "price": 0.15, "per": 100, "unit": "g" },
+  "Grapes": { "price": 0.46, "per": 100, "unit": "g" },
+  "Broccoli": { "price": 0.22, "per": 100, "unit": "g" },
+  "Carrots": { "price": 0.07, "per": 100, "unit": "g" },
+  "Kiwi fruit": { "price": 0.30, "per": 100, "unit": "g" },
+  "Cherry tomato": { "price": 0.38, "per": 100, "unit": "g" },
+  "Mango": { "price": 0.50, "per": 100, "unit": "g" },
+  "Courgettes": { "price": 0.23, "per": 100, "unit": "g" },
+  "Pears": { "price": 0.20, "per": 100, "unit": "g" },
+  "Cucumber": { "price": 0.20, "per": 100, "unit": "g" },
+  "Iceberg/mixed leaves": { "price": 0.18, "per": 100, "unit": "g" },
+  "Kale": { "price": 0.50, "per": 100, "unit": "g" },
+  "Watermelon": { "price": 0.11, "per": 100, "unit": "g" },
+  "Leeks": { "price": 0.19, "per": 100, "unit": "g" },
+  "Butternut Squash": { "price": 0.14, "per": 100, "unit": "g" },
+  "Parsnips": { "price": 0.20, "per": 100, "unit": "g" },
+  "Sugar Snaps": { "price": 0.66, "per": 100, "unit": "g" },
+  "Lettuce": { "price": 0.26, "per": 100, "unit": "g" },
+  "Mushrooms": { "price": 0.26, "per": 100, "unit": "g" },
+  "Onions": { "price": 0.09, "per": 100, "unit": "g" },
+  "Balsamic Vinegar": { "price": 0.50, "per": 100, "unit": "ml" },
+  "Peppers": { "price": 0.23, "per": 100, "unit": "g" },
+  "Chilli Cayenne": { "price": 0.10, "per": 10, "unit": "g" },
+  "Potatoes": { "price": 0.14, "per": 100, "unit": "g" },
+  "Cinnamon": { "price": 0.09, "per": 10, "unit": "g" },
+  "Spinach": { "price": 0.50, "per": 100, "unit": "g" },
+  "Cooking Salt": { "price": 0.02, "per": 10, "unit": "g" },
+  "Sweet Potato": { "price": 0.20, "per": 100, "unit": "g" },
+  "Fresh Basil/coriander": { "price": 0.30, "per": 10, "unit": "g" },
+  "Fresh Garlic": { "price": 0.12, "per": 10, "unit": "g" },
+  "Brown/white sliced bread": { "price": 0.21, "per": 100, "unit": "g" },
+  "Fresh Parsley": { "price": 0.15, "per": 100, "unit": "g" },
+  "Wrap/chapati - 10\"": { "price": 0.15, "per": 1, "unit": "each" },
+  "Grnd Black Pepper": { "price": 0.11, "per": 10, "unit": "g" },
+  "Wrap/chapati - 12\"": { "price": 0.18, "per": 1, "unit": "each" },
+  "Pitta bread": { "price": 0.12, "per": 1, "unit": "each" },
+  "Grnd White Pepper": { "price": 0.11, "per": 10, "unit": "g" },
+  "Ground Ginger": { "price": 0.09, "per": 10, "unit": "g" },
+  "Ground Mixed Spice": { "price": 0.09, "per": 10, "unit": "g" },
+  "Diced beef": { "price": 0.78, "per": 100, "unit": "g" },
+  "Ground Paprika": { "price": 0.07, "per": 10, "unit": "g" },
+  "Beef mince": { "price": 0.57, "per": 100, "unit": "g" },
+  "Chicken drumstick": { "price": 0.23, "per": 100, "unit": "g" },
+  "Mint Sauce": { "price": 0.30, "per": 100, "unit": "g" },
+  "Chicken breast fillet": { "price": 0.69, "per": 100, "unit": "g" },
+  "Mixed Herbs": { "price": 0.15, "per": 10, "unit": "g" },
+  "Diced chicken": { "price": 0.53, "per": 100, "unit": "g" },
+  "Mustard Powder": { "price": 0.22, "per": 10, "unit": "g" },
+  "Chicken thigh (boneless)": { "price": 0.60, "per": 100, "unit": "g" },
+  "Chicken mince": { "price": 0.92, "per": 100, "unit": "g" },
+  "Sweet Pickle": { "price": 0.36, "per": 100, "unit": "g" },
+  "Diced lamb": { "price": 1.08, "per": 100, "unit": "g" },
+  "Vinegar": { "price": 0.04, "per": 100, "unit": "ml" },
+  "Lamb mince": { "price": 0.68, "per": 100, "unit": "g" },
+  "Turkey fillet": { "price": 0.71, "per": 100, "unit": "g" },
+  "Diced turkey": { "price": 0.65, "per": 100, "unit": "g" },
+  "Turkey mince": { "price": 0.87, "per": 100, "unit": "g" },
+  "Tandoori seasoning": { "price": 0.08, "per": 10, "unit": "g" },
+  "Diced pork": { "price": 0.71, "per": 100, "unit": "g" },
+  "Pork mince": { "price": 0.52, "per": 100, "unit": "g" },
+  "Piri Piri seasoning": { "price": 0.12, "per": 10, "unit": "g" },
+  "Salmon": { "price": 1.80, "per": 100, "unit": "g" },
+  "Pollock": { "price": 0.89, "per": 100, "unit": "g" },
+  "Condensed milk": { "price": 0.27, "per": 100, "unit": "g" },
+  "Smoked Haddock": { "price": 1.42, "per": 100, "unit": "g" },
+  "Coconut milk": { "price": 0.21, "per": 100, "unit": "g" },
+  "Quorn Fillet": { "price": 0.75, "per": 100, "unit": "g" },
+  "Baked beans": { "price": 0.10, "per": 100, "unit": "g" },
+  "Quorn Mince": { "price": 0.71, "per": 100, "unit": "g" },
+  "Other tinned beans/pulses": { "price": 0.09, "per": 100, "unit": "g" },
+  "Tinned tomatoes": { "price": 0.09, "per": 100, "unit": "g" },
+  "Cake cases": { "price": 0.15, "per": 1, "unit": "each" },
+  "Muffin tulips": { "price": 0.27, "per": 1, "unit": "each" },
+  "Greaseproof paper": { "price": 0.02, "per": 1, "unit": "sheet" },
+  "Avocado": { "price": 1.20, "per": 100, "unit": "g" },
+  "Baby Spinach": { "price": 1.75, "per": 100, "unit": "g" },
+  "Curly Kale": { "price": 1.30, "per": 100, "unit": "g" },
+  "Butternut Pumpkin": { "price": 0.90, "per": 100, "unit": "g" },
+  "Red Cabbage": { "price": 0.45, "per": 100, "unit": "g" },
+  "Green Beans": { "price": 1.10, "per": 100, "unit": "g" },
+  "Zucchini (Courgette)": { "price": 0.80, "per": 100, "unit": "g" },
+  "Yellow Bell Pepper": { "price": 1.00, "per": 100, "unit": "g" },
+  "Orange Bell Pepper": { "price": 1.05, "per": 100, "unit": "g" },
+  "Sweetcorn": { "price": 0.55, "per": 100, "unit": "g" },
+  "Cauliflower": { "price": 0.60, "per": 100, "unit": "g" },
+  "Savoy Cabbage": { "price": 0.48, "per": 100, "unit": "g" },
+  "Baby Leek": { "price": 0.95, "per": 100, "unit": "g" },
+  "Radish": { "price": 0.65, "per": 100, "unit": "g" },
+  "Watercress": { "price": 1.40, "per": 100, "unit": "g" },
+  "Asparagus": { "price": 0.93, "per": 100, "unit": "g" }, 
+  "Fennel": { "price": 1.20, "per": 100, "unit": "g" },
+  "Rocket": { "price": 1.10, "per": 100, "unit": "g" },
+  "Celery": { "price": 0.45, "per": 100, "unit": "g" },
+  "Shiitake Mushrooms": { "price": 2.10, "per": 100, "unit": "g" },
+  "Portobello Mushrooms": { "price": 1.70, "per": 100, "unit": "g" },
+  "Pomegranate": { "price": 1.50, "per": 100, "unit": "g" },
+  "Passionfruit": { "price": 0.40, "per": 100, "unit": "g" },
+  "Raspberries": { "price": 2.80, "per": 100, "unit": "g" },
+  "Brussels Sprouts": { "price": 0.85, "per": 100, "unit": "g" },
+  "Celeriac": { "price": 0.70, "per": 100, "unit": "g" },
+  "Chard": { "price": 1.25, "per": 100, "unit": "g" },
+  "Edamame Beans": { "price": 1.80, "per": 100, "unit": "g" },
+  "Kohlrabi": { "price": 0.90, "per": 100, "unit": "g" },
+  "Papaya": { "price": 1.35, "per": 100, "unit": "g" },
+  "Peaches": { "price": 1.10, "per": 100, "unit": "g" },
+  "Plums": { "price": 1.20, "per": 100, "unit": "g" },
+  "Cherries": { "price": 2.80, "per": 100, "unit": "g" },
+  "Cranberries": { "price": 3.00, "per": 100, "unit": "g" },
+  "Gooseberries": { "price": 2.20, "per": 100, "unit": "g" },
+  "Blackberries": { "price": 2.40, "per": 100, "unit": "g" },
+  "Mulberries": { "price": 3.10, "per": 100, "unit": "g" },
+  "Rhubarb": { "price": 0.95, "per": 100, "unit": "g" },
+  "Turnip": { "price": 0.60, "per": 100, "unit": "g" },
+  "Parsnip (baby)": { "price": 1.00, "per": 100, "unit": "g" },
+  "Pumpkin Seeds": { "price": 2.50, "per": 100, "unit": "g" },
+  "Sunflower Seeds": { "price": 2.20, "per": 100, "unit": "g" },
+  "Walnuts": { "price": 3.50, "per": 100, "unit": "g" },
+  "Almonds": { "price": 3.80, "per": 100, "unit": "g" },
+  "Cashews": { "price": 4.20, "per": 100, "unit": "g" },
+  "Hazelnuts": { "price": 3.90, "per": 100, "unit": "g" },
+  "Pistachios": { "price": 4.50, "per": 100, "unit": "g" },
+  "Macadamia Nuts": { "price": 5.00, "per": 100, "unit": "g" },
+  "Pecans": { "price": 4.70, "per": 100, "unit": "g" },
+  "Brazil Nuts": { "price": 4.80, "per": 100, "unit": "g" },
+  "Chestnuts": { "price": 2.50, "per": 100, "unit": "g" },
+  "Tiger Nuts": { "price": 3.60, "per": 100, "unit": "g" },
+  "Pine Nuts": { "price": 5.20, "per": 100, "unit": "g" },
+  "Default": {"price": 1, "per": 100, "unit": "g"}
+}
+
+
+function parseIngredientString(ingredientStr) {
+  return ingredientStr.split(",").map(item => {
+    // Match number, optional space, optional unit, then ingredient name (preserve spaces)
+    const match = item.trim().match(/^([\d.]+)\s*([a-zA-Z]+)?\s*(.+)$/);
+    if (!match) return null;
+    const [, amount, unit, name] = match;
+    return { 
+      amount: parseFloat(amount), 
+      unit: unit ? unit.toLowerCase() : null, 
+      name: name.trim() // preserve spaces
+    };
+  }).filter(Boolean);
+}
+
+function convertUnit(amount, fromUnit, toUnit) {
+  if (!fromUnit || !toUnit) return null;
+  fromUnit = fromUnit.toLowerCase();
+  toUnit = toUnit.toLowerCase();
+
+  if (fromUnit === toUnit) return amount;
+  if ((fromUnit === "ml" && toUnit === "g") || (fromUnit === "g" && toUnit === "ml")) {
+    return amount; // rough approximation
+  }
+  return null; // unknown conversion
+}
+
+function calculateTotalCost(ingredientStr) {
+    console.log(ingredientStr)
+  const ingredients = parseIngredientString(ingredientStr);
+  let totalCost = 0;
+
+  for (const ing of ingredients) {
+    // Find first entry in costs that includes the ingredient name (case-insensitive)
+    let costEntry = Object.entries(costs).find(
+      ([key]) => key.toLowerCase().includes(ing.name.toLowerCase())
+    );
+    if (costEntry) costEntry = costEntry[1];
+    else {
+        costEntry = costs["Default"]; // fallback
+    }
+
+    let amountInCostUnit = ing.amount;
+    if (ing.unit && costEntry.unit) {
+      const converted = convertUnit(ing.amount, ing.unit, costEntry.unit);
+      if (converted !== null) amountInCostUnit = converted;
+      else { // unit not identifiable, set £1
+        totalCost += 0.78;
+        continue;
+      }
+    } else if (!ing.unit) { // missing unit, set £1
+      totalCost += 0.78;
+      continue;
+    }
+
+    const cost = (amountInCostUnit / costEntry.per) * costEntry.price;
+    totalCost += cost;
+  }
+
+  return parseFloat(totalCost.toFixed(2));
+}
+
+function CostPerPerson(ingredientStr, portions){
+    return parseFloat((calculateTotalCost(ingredientStr)/portions).toFixed(2))
+}
+function calculateTime(str) {
+  const count = (str.match(/\n/g) || []).length;
+  return count * 4/2;
+}
+
+const ED_apikey = "44058cdda3c9b47d8199476afe630d5b"
+const ED_appid = "f4dac682"
+const ED_apikey2 = "62b677ce52ffdbd9df71f795cd290513"
+const ED_appid2 = "a86a5d3b"
+const ED_apikey3 = "35b4e7731ad11d8057ac13f071a3bb65"
+const ED_appid3 = "dce4808c"
+const ED_apikey4 = "92d5475bcf17d4340a538aa770b2f206"
+const ED_appid4 = "7db14b31"
+const ED_apikey5 = "b6f6357af10e5776a5af294dd86fcda3"
+const ED_appid5 = "cb2758a4"
+const ED_apikey6 = "cf5b3d027dbef78e31bce528632c9def"
+const ED_appid6 = "2c951abb"
+async function getNutritionFacts(ingredient) {
+  const url = `https://api.edamam.com/api/nutrition-data?app_id=${ED_appid2}&app_key=${ED_apikey2}&nutrition-type=cooking&ingr=${encodeURIComponent(ingredient)}`;
+
+  const response = await fetch(url);
+  console.log(`GET ${url} → ${response.status} ${response.statusText}`);
+
+  if (!response.ok) {
+    console.error("Request failed with status:", response.status);
+    return null;
+  }
+
+  const data = await response.json();
+
+  const parsed = data.ingredients?.[0]?.parsed?.[0];
+  if (!parsed || !parsed.nutrients) {
+    console.log("No nutrient data found for:", ingredient);
+    return {
+      calories: 0,
+      totalFat: 0,
+      saturatedFat: 0,
+      transFat: 0,
+      cholesterol: 0,
+      sodium: 0,
+      totalCarbs: 0,
+      sugars: 0,
+      protein: 0,
+    };
+  }
+
+  const nutrients = parsed.nutrients;
+  const safeNum = (x) => Number(x) || 0;
+
+  return {
+    calories: safeNum(nutrients.ENERC_KCAL?.quantity),
+    totalFat: safeNum(nutrients.FAT?.quantity),
+    saturatedFat: safeNum(nutrients.FASAT?.quantity),
+    transFat: safeNum(nutrients.FATRN?.quantity),
+    cholesterol: safeNum(nutrients.CHOLE?.quantity),
+    sodium: safeNum(nutrients.NA?.quantity),
+    totalCarbs: safeNum(nutrients.CHOCDF?.quantity),
+    sugars: safeNum(nutrients.SUGAR?.quantity),
+    protein: safeNum(nutrients.PROCNT?.quantity),
+  };
+}
+
+async function getTotalNutrition(ingredientsStr, portions) {
+  const ingredients = ingredientsStr
+    .split(",")
+    .map(i => i.trim())
+    .filter(Boolean)
+    .map(i => i.includes("g") || /\d/.test(i)
+      ? i.replace(/^-+\s*/, "")
+      : "50g " + i.replace(/^-+\s*/, "")
+    );
+
+  const total = {
+    calories: 0,
+    totalFat: 0,
+    saturatedFat: 0,
+    transFat: 0,
+    cholesterol: 0,
+    sodium: 0,
+    totalCarbs: 0,
+    sugars: 0,
+    protein: 0,
+  };
+
+  for (const item of ingredients) {
+    const facts = await getNutritionFacts(item);
+    if (facts) {
+      for (const key in total) {
+        total[key] += Number(facts[key]) || 0;
+      }
+    }
+  }
+
+  for (const key in total) {
+    total[key] = Math.round((total[key] / portions) * 10) / 10;
+  }
+
+  return total;
+}
+
+function updateNutritionFacts(nutrition) {
+  console.log(nutrition)
+  const nf = document.getElementById("nutrition-facts");
+
+  const dailyMax = {
+    totalFat: 78,         // g
+    saturatedFat: 20,     // g
+    cholesterol: 300,     // mg
+    sodium: 2300,         // mg
+    totalCarbs: 275,      // g
+    protein: 50,          // g
+    calories: 2000        // kcal baseline
+  };
+
+  const daily = {
+    totalFat: (nutrition.totalFat / dailyMax.totalFat) * 100,
+    saturatedFat: (nutrition.saturatedFat / dailyMax.saturatedFat) * 100,
+    cholesterol: (nutrition.cholesterol / dailyMax.cholesterol) * 100,
+    sodium: (nutrition.sodium / dailyMax.sodium) * 100,
+    totalCarbs: (nutrition.totalCarbs / dailyMax.totalCarbs) * 100,
+    protein: (nutrition.protein / dailyMax.protein) * 100
+  };
+
+  const format = (val, unit = "") => `${Math.round(val)}${unit}`;
+  const dailyFormat = val => `${Math.round(val)}%`;
+
+  // Calories
+  nf.querySelector(".calories .value").textContent = format(nutrition.calories);
+
+  // Total Fat
+  const fatLine = nf.querySelector(".total-fat");
+  if (fatLine) {
+    fatLine.querySelector(".value").textContent = format(nutrition.totalFat, "g");
+    fatLine.querySelector(".daily").textContent = dailyFormat(daily.totalFat);
+  }
+
+  // Saturated Fat
+  const satFat = nf.querySelector(".sat-fat");
+  if (satFat) {
+    satFat.querySelector(".value").textContent = format(nutrition.saturatedFat, "g");
+    satFat.querySelector(".daily").textContent = dailyFormat(daily.saturatedFat);
+  }
+
+  // Trans Fat
+  const transFat = nf.querySelector(".trans-fat");
+  if (transFat) {
+    transFat.querySelector(".value").textContent = format(nutrition.transFat, "g");
+  }
+
+  // Cholesterol
+  const chol = nf.querySelector(".cholesterol");
+  if (chol) {
+    chol.querySelector(".value").textContent = format(nutrition.cholesterol, "mg");
+    chol.querySelector(".daily").textContent = dailyFormat(daily.cholesterol);
+  }
+
+  // Sodium
+  const sodium = nf.querySelector(".sodium");
+  if (sodium) {
+    sodium.querySelector(".value").textContent = format(nutrition.sodium, "mg");
+    sodium.querySelector(".daily").textContent = dailyFormat(daily.sodium);
+  }
+
+  // Total Carbs
+  const carbs = nf.querySelector(".carbs");
+  if (carbs) {
+    carbs.querySelector(".value").textContent = format(nutrition.totalCarbs, "g");
+    carbs.querySelector(".daily").textContent = dailyFormat(daily.totalCarbs);
+  }
+
+  // Sugars
+  const sugar = nf.querySelector(".sugars");
+  if (sugar) {
+    sugar.querySelector(".value").textContent = format(nutrition.sugars, "g");
+  }
+
+  // Protein
+  const protein = nf.querySelector(".protein");
+  if (protein) {
+    protein.querySelector(".value").textContent = format(nutrition.protein, "g");
+    const dailyEl = protein.querySelector(".daily");
+    if (dailyEl) dailyEl.textContent = dailyFormat(daily.protein);
+  }
+}
+
+
 function _show_recipe() {
   _show_recipe = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-    var text, ingredientDisplay, recipeDisplay, title, prompt, recipe, errorMsg, recipeHtml, parts, ingredients_styled, recipes_styled, total_time, total_cost;
+    var text, ingredientDisplay, recipe_list, temp, recipeDisplay, title, prompt, recipe, errorMsg, recipeHtml, parts, ingredients_styled, recipes_styled, total_time, total_cost;
     return _regeneratorRuntime().wrap(function _callee$(_context) {
       while (1) switch (_context.prev = _context.next) {
         case 0:
@@ -670,20 +1111,32 @@ function _show_recipe() {
           recipeDisplay.innerHTML = "";
           return _context.abrupt("return");
         case 21:
+          temp = recipe.split("Recipe:");
+          recipe_list = recipe.replace(/\n/g, ', ')
           recipeHtml = recipe.replace(/\n/g, '<br>');
           parts = recipeHtml.split("Recipe:");
           ingredients_styled = markdownStyling(parts[0].replace(/^Ingredients:\s*/, ""));
           recipes_styled = markdownStyling(parts[1]);
           ingredientDisplay.innerHTML = ingredients_styled;
           recipeDisplay.innerHTML = recipes_styled || "";
-          
-        case 27:
+          total_time = calculateTime(temp[1])
+          document.querySelector("#total-time").querySelector(".value").textContent = total_time
+          total_cost = calculateTotalCost(temp[0].replace(/\n/g, ', '))
+          document.querySelector("#total-cost").querySelector(".value").textContent = total_cost;
+          /*
+          (async () => {
+            const totals = await getTotalNutrition(temp[0].replace(/\n/g, ', '), portions);
+            updateNutritionFacts(totals);
+          })();
+          */
+          case 27:
+          total_time = calculateTime(recipe)
+          document.querySelector("#total-time").querySelector(".value").textContent = total_time
+          total_cost = calculateTotalCost(recipe_list)
+          document.querySelector("#total-cost").querySelector(".value").textContent = total_cost
         case "end":
           return _context.stop();
-        total_time = calculateTime(recipe_list)
-        document.querySelector("#total-time").querySelector(".value").textContent = total_time
-        total_cost = calculateTotalCost(recipe_list)
-        document.querySelector("#total-cost").querySelector(".value").textContent = total_cost
+        
 
       }
     }, _callee);
