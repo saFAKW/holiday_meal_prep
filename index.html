@@ -1,79 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>World Meals Explorer</title>
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Bites</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles/nutrition.css">
+        <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
 </head>
-<body>
-  <header>
-    <h1>🌎 World Meals Explorer</h1>
-    <p>Click on a country to discover its national dishes!</p>
-  </header>
+<body onload="getImage()">
+    <div class="header">
+        <div class="bubblepop"></div>
+            <h1 class ="title">
+                <img class = "globe" src="https://upload.wikimedia.org/wikipedia/commons/6/6b/Rotating_globe.gif"> 
+                Global Bites
+            </h1>  
+    </div>
+    <div class = "spline spline-1">
+                <script type="module" src="https://unpkg.com/@splinetool/viewer@1.10.99/build/spline-viewer.js"></script>
+                <spline-viewer url="https://prod.spline.design/7in9EvYre3ThJ8Ah/scene.splinecode"></spline-viewer>
+       
+    </div>
+    <div class = "spline spline-2">
+        <script type="module" src="https://unpkg.com/@splinetool/viewer@1.10.99/build/spline-viewer.js"></script>
+        <spline-viewer url="https://prod.spline.design/vbmivFF0iTWVanlP/scene.splinecode"></spline-viewer>
+        
+    </div>
+    <div class = "spline spline-3">
+        <script type="module" src="https://unpkg.com/@splinetool/viewer@1.10.99/build/spline-viewer.js"></script>
+        <spline-viewer url="https://prod.spline.design/iTYUYcXzpKRnCXOw/scene.splinecode"></spline-viewer>
+    </div>
+    <div class = "spline spline-4">
+        <script type="module" src="https://unpkg.com/@splinetool/viewer@1.10.99/build/spline-viewer.js"></script>
+        <spline-viewer url="https://prod.spline.design/FGcObhOQryRt9Wdo/scene.splinecode"></spline-viewer>
+    </div>
+    
+            <div id="map"></div>
 
-  <main>
-    <div id="map"></div>
-    <div id="dishes"></div>
-  </main>
 
-  <footer>
-    <p>Hackathon Project - Explore global cuisine 🌍</p>
-  </footer>
 
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <script>
-    const map = L.map('map').setView([20, 0], 2);
+    <!-- Toggle button for ingredients sheet -->
+    <button class="toggle-btn" onclick="toggleSheet()">Ingredients</button>
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
-
-    const countries = [
-      { name: 'Canada', lat: 56, lng: -106 },
-      { name: 'Italy', lat: 42.5, lng: 12.5 },
-      { name: 'Japan', lat: 36, lng: 138 }
-    ];
-
-    countries.forEach(c => {
-      L.marker([c.lat, c.lng]).addTo(map)
-        .bindPopup(c.name)
-        .on('click', () => showDishes(c.name));
-    });
-
-    async function showDishes(country) {
-      const dishesDiv = document.getElementById('dishes');
-      dishesDiv.innerHTML = '<p class="loading">Loading dishes...</p>';
-
-      try {
-        const res = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?a=${country}`);
-        const data = await res.json();
-
-        if (data.meals) {
-          dishesDiv.innerHTML = '';
-          for (let meal of data.meals) {
-            const imgRes = await fetch(`/image?query=${encodeURIComponent(meal.strMeal)}`);
-            const imgData = await imgRes.json();
-
-            const mealDiv = document.createElement('div');
-            mealDiv.className = 'meal-card';
-            mealDiv.innerHTML = `
-              <img src="${imgData.url}" alt="${meal.strMeal}">
-              <h3>${meal.strMeal}</h3>
-              <p><strong>Category:</strong> ${meal.strCategory}</p>
-              <p><strong>Area:</strong> ${meal.strArea}</p>
-            `;
-            dishesDiv.appendChild(mealDiv);
-          }
-        } else {
-          dishesDiv.innerHTML = '<p class="loading">No dishes found for this country.</p>';
-        }
-      } catch (err) {
-        dishesDiv.innerHTML = '<p class="loading">Error fetching dishes.</p>';
-        console.error(err);
-      }
-    }
-  </script>
+    <!-- Drag-in side sheet -->
+    <div class="ingredients-sheet" id="ingredientsSheet">
+        <button class="close-btn" onclick="toggleSheet()">×</button>
+        <h2>Ingredients</h2>
+        
+        <div class="recipe_1">
+            <strong>'Recipe 1 Name'</strong>
+            <p style="margin-top: 10px; color: #7f8c8d;">-ingredients per recipe-</p>
+        </div>
+        
+        <div class="recipe_2">
+            <strong>'Recipe 2 Name'</strong>
+            <p style="margin-top: 10px; color: #7f8c8d;">-ingredients per recipe-</p>
+        </div>
+        
+        <div class="recipe_3">
+            <strong>'Recipe 3 Name'</strong>
+            <p style="margin-top: 10px; color: #7f8c8d;">-ingredients per recipe-</p>
+        </div>
+    </div>
+    
 </body>
-</html>
+    <script src="map.js"></script>
+    <script src="bundle.js"></script>
+    <script src="popups.js"></script>
+    <script src="scripts/bubbles.js"></script>
+    <script src="images.js"></script>
+    <script src="./scripts/add_to_list.js"></script>
+</body>
