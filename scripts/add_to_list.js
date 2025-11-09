@@ -95,6 +95,7 @@ function updateIngredientsList(fullRecipeText) {
 
 function add_ingredients_to_list() {
     const addButton = document.getElementById("add");
+    const skipButton = document.getElementById("skip")
     const recipeText = document.getElementById("recipe-p");
 
     if (!addButton || !recipeText) {
@@ -111,6 +112,14 @@ function add_ingredients_to_list() {
         current_cuisine = british_cuisine[counter];
         recipeText.textContent = current_cuisine;
     });
+
+    skipButton.addEventListener("click", async () => {
+        console.log("click add to basket")
+        show_recipe()
+        current_cuisine = british_cuisine[counter];
+        recipeText.textContent = current_cuisine;
+    });
+    counter++
 }
 
 
