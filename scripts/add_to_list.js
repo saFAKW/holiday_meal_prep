@@ -111,7 +111,6 @@ function add_ingredients_to_list() {
         current_cuisine = british_cuisine[counter];
         recipeText.textContent = current_cuisine;
     });
-}
 
 
 export { add_ingredients_to_list };
