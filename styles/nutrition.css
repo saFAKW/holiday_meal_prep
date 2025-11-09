@@ -193,5 +193,56 @@ html,body{
     z-index: 10;
     top:0%;
     left: 55%;
-    transform: translate(30%, -37%);
+}
+
+.spline-1{
+    animation: spline-1-keys 30s ease-in infinite;
+}
+
+@keyframes spline-1-keys{
+    0% {transform: translate(65%, -37%);}
+    5% {transform: translate(30%, -37%);}
+    25% {transform: translate(30%, -37%);}
+    30% {transform: translate(65%, -37%);}
+    100% {transform: translate(65%, -37%);}
+}
+
+.spline-2{
+    animation: spline-2-keys 30s ease-in infinite;
+}
+
+@keyframes spline-2-keys{
+    0% {transform: translate(65%, -33%);}
+    25% {transform: translate(65%, -33%);}
+    30% {transform: translate(30%, -33%);}
+    50% {transform: translate(30%, -33%);}
+    55% {transform: translate(65%, -33%);}
+    100% {transform: translate(65%, -33%);}
+}
+
+.spline.spline-3{
+    left: 60%;
+    animation: spline-3-keys 30s ease-in infinite;
+}
+
+@keyframes spline-3-keys{
+    0% {transform: translate(65%, -13%);}
+    50% {transform: translate(65%, -13%);}
+    55% {transform: translate(32%, -13%);}
+    75% {transform: translate(32%, -13%);}
+    80% {transform: translate(65%, -13%);}
+    100% {transform: translate(65%, -13%);}
+}
+
+.spline.spline-4{
+    left: 60%;
+    animation: spline-4-keys 30s ease-in infinite;
+}
+
+@keyframes spline-4-keys{
+    0% {transform: translate(65%, -25%);}
+    75% {transform: translate(65%, -25%);}
+    80% {transform: translate(32%, -25%);}
+    95% {transform: translate(32%, -25%);}
+    100% {transform: translate(65%, -25%);}
 }
