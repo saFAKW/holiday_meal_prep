@@ -24,7 +24,6 @@ body {
 }
 .title{
   text-align: center;
-  font-size: 100px;
 }
 .main-container {
   display: flex;
