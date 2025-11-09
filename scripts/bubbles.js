@@ -4,7 +4,6 @@ var posLeft;
 var speed;
 var margin;
 const bubblediv = document.querySelector('.bubblepop');
-console.log("b");
 for (let i = 0; i < 40; i++) {
     const height = Math.floor(Math.random() * 100) + 1;
     const width = height;

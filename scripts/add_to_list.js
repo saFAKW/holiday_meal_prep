@@ -1,6 +1,8 @@
+import { show_recipe } from './get_recipe.js';
+
 const british_cuisine = [
     "Full English Breakfast",
-    "Eggs Benedict",
+    // "Eggs Benedict",
     "Beans on Toast",
     "Porridge",
     "Kippers",
@@ -92,34 +94,24 @@ function updateIngredientsList(fullRecipeText) {
 }
 
 function add_ingredients_to_list() {
-    const recipeButton = document.getElementById("add");
+    const addButton = document.getElementById("add");
     const recipeText = document.getElementById("recipe-p");
 
-    if (!recipeButton || !recipeText) {
+    if (!addButton || !recipeText) {
         console.error("Missing required elements");
         return;
     }
 
-    // ✅ Set the first recipe automatically on load
     recipeText.textContent = current_cuisine;
 
-    recipeButton.addEventListener("click", async () => {
-        // Update list with current recipe
+    addButton.addEventListener("click", async () => {
+        console.log("click add to basket")
         updateIngredientsList(recipeText.textContent);
-
-        // Move to the next cuisine
-        counter++;
-        if (counter >= british_cuisine.length) {
-            counter = 0; // loop back to start
-        }
-
-        // Set the new current recipe
+        show_recipe()
         current_cuisine = british_cuisine[counter];
         recipeText.textContent = current_cuisine;
     });
 }
 
-// ✅ Start automatically when page loads
-window.addEventListener("DOMContentLoaded", add_ingredients_to_list);
 
 export { add_ingredients_to_list };
