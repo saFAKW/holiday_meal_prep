@@ -184,7 +184,13 @@ body {
   font-size: 20px;
   color: #2c3e50;
 }
+#food {
+  transition: font-weight 0.2s ease;
+}
 
+#food:hover {
+  font-weight: bold;
+}
 #portions{
   color: #2c3e50;
 }
