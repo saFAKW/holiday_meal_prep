@@ -98,7 +98,7 @@ function add_ingredients_to_list() {
     const skipButton = document.getElementById("skip")
     const recipeText = document.getElementById("recipe-p");
 
-    if (!addButton || !recipeText) {
+    if (!addButton || !recipeText || !skipButton) {
         console.error("Missing required elements");
         return;
     }
@@ -106,14 +106,16 @@ function add_ingredients_to_list() {
     recipeText.textContent = current_cuisine;
 
     addButton.addEventListener("click", async () => {
+        alert("added to shopping list")
         console.log("click add to basket")
         updateIngredientsList(recipeText.textContent);
         show_recipe()
         current_cuisine = british_cuisine[counter];
         recipeText.textContent = current_cuisine;
     });
-
+/*skip button functionality*/
     skipButton.addEventListener("click", async () => {
+        alert("skipped")
         console.log("click add to basket")
         show_recipe()
         current_cuisine = british_cuisine[counter];
