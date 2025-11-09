@@ -246,3 +246,9 @@ html,body{
     80% {transform: translate(32%, -22%);}
     100% {transform: translate(32%, -22%);}
 }
+
+hr.green {
+    border:none;
+  border-top: 6px solid rgba(87, 199, 133, 1);
+  margin-top: 20px;
+}
