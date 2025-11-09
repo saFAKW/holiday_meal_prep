@@ -59,23 +59,37 @@ export async function show_recipe(){
     let text = "";
     const ingredientDisplay = document.getElementById("ingredients-p");
     const recipeDisplay = document.getElementById("recipe-p");
+    const title = document.getElementById("food");
+    
+    if (!ingredientDisplay || !recipeDisplay || !title) {
+        console.error("Missing required DOM elements");
+        return;
+    }
+    
+    // Use current counter value first, then increment for next time
+    current_cuisine = british_cuisine[counter];
+    console.log(`current_cuisine ${current_cuisine}`);
+    
     counter++;
     if (counter >= british_cuisine.length) {
         counter = 0;
     }
-    current_cuisine = british_cuisine[counter];
-    console.log(`current_cuisine ${current_cuisine}`)
-    const title = document.getElementById("food");
-    const prompt = `Please provide a simple recipe for ${title.textContent} ${PROMPT}`
+    
+    // Update title first, then use it for the prompt
+    title.innerHTML = current_cuisine;
+    const prompt = `Please provide a simple recipe for ${current_cuisine} ${PROMPT}`;
+    
     const recipe = await callGeminiApi(prompt);
-    if(!recipe){    
-        recipe = "no results"
+    if(!recipe || recipe.startsWith("error")){    
+        const errorMsg = recipe || "no results";
+        ingredientDisplay.innerHTML = `<p style="color: red;">Error: ${errorMsg}</p>`;
+        recipeDisplay.innerHTML = "";
+        return;
     }
+    
     const recipeHtml = recipe.replace(/\n/g, '<br>');
     const parts = recipeHtml.split("Recipe:");
     ingredientDisplay.innerHTML = parts[0];
-    recipeDisplay.innerHTML = parts[1];
-    title.innerHTML = current_cuisine
-   
+    recipeDisplay.innerHTML = parts[1] || "";
 }; 
 

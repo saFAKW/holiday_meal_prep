@@ -1979,9 +1979,9 @@ function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.
 function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
 var _require = require("@google/generative-ai"),
   GoogleGenerativeAI = _require.GoogleGenerativeAI;
-var API_KEY = "AIzaSyAGePYh6PX1JwXAWRFDbUupdeHEa9HQ8NY";
+var API_KEY = "AIzaSyByg-uPjUJkgOD_kqwVzAaWJ4qBbVa82yM";
 var MODEL_NAME = "gemini-2.5-flash";
-var API_URL = "https://generativelanguage.googleapis.com/v1beta/models/".concat(MODEL_NAME, ":generateContent?key=").concat(API_KEY);
+var API_URL = "https://generativelanguage.googleapis.com/v1/models/".concat(MODEL_NAME, ":generateContent?key=").concat(API_KEY);
 function callGeminiApi(_x) {
   return _callGeminiApi.apply(this, arguments);
 }
@@ -2023,12 +2023,19 @@ function _callGeminiApi() {
           return response.json();
         case 8:
           errorData = _context.sent;
-          throw new Error("API request failed: ".concat(errorData.error.message));
+          var errorMessage = errorData.error && errorData.error.message ? errorData.error.message : 'Unknown error';
+          if (errorMessage.includes("quota") || errorMessage.includes("Quota exceeded")) {
+            return _context.abrupt("return", "error Quota exceeded. The free tier allows 250 requests per day. Please wait for the quota to reset or check usage at https://ai.dev/usage?tab=rate-limit");
+          }
+          throw new Error("API request failed: ".concat(errorMessage));
         case 10:
           _context.next = 12;
           return response.json();
         case 12:
           data = _context.sent;
+          if (!data.candidates || !data.candidates[0] || !data.candidates[0].content) {
+            throw new Error('Invalid response format from API');
+          }
           text = data.candidates[0].content.parts[0].text;
           return _context.abrupt("return", text);
         case 17:
