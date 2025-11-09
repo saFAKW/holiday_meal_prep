@@ -1,3 +1,4 @@
+// Initialize the map at world view
 const map = L.map('map').setView([20, 0], 2);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -6,28 +7,23 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 let currentMarker = null;
 
-// Mapping ThemealDB areas
+// Mapping some country names to ThemealDB areas (needed to get results)
 const countryToThemealDB = {
     "United States": "American",
     "United Kingdom": "British",
     "Russia": "Russian",
-    "France": "French",
-    "Italy": "Italian",
-    "Spain": "Spanish",
-    "Germany": "German",
-    "Mexico": "Mexican",
-    "India": "Indian",
-    "China": "Chinese",
-    "Japan": "Japanese",
+    "South Korea": "Korean",
+    "North Korea": "Korean",
+    "Viet Nam": "Vietnamese",
+    "Iran": "Iranian",
+    "Egypt": "Egyptian",
     "Morocco": "Moroccan",
-    "Thailand": "Thai",
-    "Canada": "Canadian",
-    "Vietnam": "Vietnamese"
+    // Add more mappings if needed
 };
 
-// ---------- MAP CLICK ----------
 map.on('click', async function(e) {
     if (currentMarker) map.removeLayer(currentMarker);
+
     currentMarker = L.marker(e.latlng).addTo(map);
 
     const country = await getCountryFromLatLng(e.latlng.lat, e.latlng.lng);
@@ -36,9 +32,11 @@ map.on('click', async function(e) {
         return;
     }
 
-    const area = countryToThemealDB[country] || country;
+    const area = countryToThemealDB[country] || country; // fallback to country name
+
     document.getElementById("title").textContent = `Dishes from ${country}`;
-    fetchDishes(area, country);
+
+    fetchDishes(area);
 });
 
 async function getCountryFromLatLng(lat, lng) {
@@ -52,8 +50,7 @@ async function getCountryFromLatLng(lat, lng) {
     }
 }
 
-// ---------- FETCH DISHES ----------
-async function fetchDishes(area, country) {
+async function fetchDishes(area) {
     const resultDiv = document.getElementById("result");
     resultDiv.innerHTML = "<p>Loading dishes...</p>";
 
@@ -62,15 +59,22 @@ async function fetchDishes(area, country) {
         const data = await res.json();
 
         if (!data.meals) {
-            resultDiv.innerHTML = `<p>No dishes found for ${country} (${area}).</p>`;
+            resultDiv.innerHTML = `<p>No dishes found for this country (${area}).</p>`;
             return;
         }
 
         resultDiv.innerHTML = "";
+
         for (const meal of data.meals) {
-            const imgRes = await fetch(`http://127.0.0.1:5000/get_image?food=${encodeURIComponent(meal.strMeal)}`);
-            const imgData = await imgRes.json().catch(() => ({}));
-            const imgUrl = imgData.url || meal.strMealThumb;
+            // Try Wikimedia first, fallback to MealDB image
+            let imgUrl = meal.strMealThumb;
+            try {
+                const imgRes = await fetch(`http://127.0.0.1:5000/get_image?food=${encodeURIComponent(meal.strMeal)}`);
+                const imgData = await imgRes.json();
+                if (imgData.url) imgUrl = imgData.url;
+            } catch (e) {
+                console.log("Image fetch failed, fallback to MealDB image.");
+            }
 
             const card = document.createElement("div");
             card.className = "meal-card";
@@ -95,11 +99,11 @@ async function fetchDishes(area, country) {
             resultDiv.appendChild(card);
 
             card.querySelector(".wishlist-btn").addEventListener("click", () => {
-                addToWishlist(meal.strMeal, imgUrl, country);
+                addToWishlist(meal.strMeal, imgUrl);
             });
         }
     } catch (err) {
         console.error(err);
-        resultDiv.innerHTML = "<p style='color:red;'>Error fetching dishes.</p>";
+        resultDiv.innerHTML = "<p style='color:red;'>Error fetching dishes. Try again later.</p>";
     }
 }

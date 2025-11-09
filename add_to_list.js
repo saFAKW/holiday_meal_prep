@@ -3,19 +3,8 @@ let culturePoints = parseInt(localStorage.getItem("culturePoints") || "0");
 let completedCountries = new Set(JSON.parse(localStorage.getItem("completedCountries") || "[]"));
 
 function updatePointsDisplay() {
-    const pointsEl = document.getElementById("points-count");
-    pointsEl.textContent = culturePoints;
-
-    // Subtle highlight animation when points increase
-    pointsEl.style.transition = "transform 0.3s ease, color 0.3s ease";
-    pointsEl.style.transform = "scale(1.3)";
-    pointsEl.style.color = "#fff6a3";
-    setTimeout(() => {
-        pointsEl.style.transform = "scale(1)";
-        pointsEl.style.color = "white";
-    }, 300);
+    document.getElementById("points-count").textContent = culturePoints;
 }
-
 
 function addToWishlist(name, img, country) {
     if (wishlist.some(item => item.name === name)) {
@@ -100,42 +89,4 @@ function renderWishlist() {
 document.addEventListener("DOMContentLoaded", () => {
     renderWishlist();
     updatePointsDisplay();
-});
-
-// ========== ACHIEVEMENT BOARD ==========
-
-function renderAchievements() {
-    const board = document.getElementById("achievement-board");
-    const list = document.getElementById("completed-countries-list");
-    const msg = document.getElementById("achievement-msg");
-
-    list.innerHTML = "";
-
-    if (completedCountries.size === 0) {
-        list.innerHTML = "<li>No countries completed yet — time to explore!</li>";
-    } else {
-        [...completedCountries].forEach(country => {
-            const li = document.createElement("li");
-            li.textContent = country;
-            list.appendChild(li);
-        });
-    }
-
-    // Fun messages
-    if (culturePoints === 0) {
-        msg.textContent = "Start your journey by trying a new dish!";
-    } else if (culturePoints < 5) {
-        msg.textContent = "You're becoming a true foodie traveler!";
-    } else if (culturePoints < 10) {
-        msg.textContent = "Amazing! You're collecting global flavors!";
-    } else {
-        msg.textContent = "You're a world cuisine master! 🌎";
-    }
-}
-
-// Toggle open/close on badge click
-document.getElementById("culture-points").addEventListener("click", () => {
-    const board = document.getElementById("achievement-board");
-    board.classList.toggle("open");
-    renderAchievements();
 });

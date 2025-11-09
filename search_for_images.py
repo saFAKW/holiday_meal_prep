@@ -95,5 +95,19 @@ def get_image():
         return jsonify({"error": "no image found"}), 404
     return jsonify(image)
 
+@app.route("/get_dishes")
+def get_dishes():
+    area = request.args.get("area")
+    if not area:
+        return jsonify({"error": "missing 'area' parameter"}), 400
+
+    try:
+        res = requests.get(f"https://www.themealdb.com/api/json/v1/1/filter.php?a={area}", timeout=10)
+        res.raise_for_status()
+        return jsonify(res.json())
+    except Exception as e:
+        print("MealDB error:", e)
+        return jsonify({"error": "failed to fetch"}), 500
+
 if __name__ == "__main__":
     app.run(debug=True)
