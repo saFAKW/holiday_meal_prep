@@ -23,13 +23,13 @@ function makeMap(){
     {zoom: 4, center: location});
 }
 
-var image = document.getElementById("food");
-image.onmouseover = function(){
-    document.getElementById("nutrition-facts").style.display = "block";
-}
-image.onmouseout = function(){
-    document.getElementById("nutrition-facts").style.display = "none";
-}
+// var image = document.getElementById("food");
+// image.onmouseover = function(){
+//     document.getElementById("nutrition-facts").style.display = "block";
+// }
+// image.onmouseout = function(){
+//     document.getElementById("nutrition-facts").style.display = "none";
+// }
 
 check = document.getElementById("portions").addEventListener("keydown", accessData)
 
