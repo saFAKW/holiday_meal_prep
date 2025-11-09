@@ -1,120 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global Bites</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="styles/nutrition.css">
-        <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <!-- Leaflet JS -->
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>World Meals Explorer</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 </head>
-<body onload="getImage()">
-    <div class="header">
-        <div class="bubblepop"></div>
-            <h1 class ="title">
-                <img class = "globe" src="https://upload.wikimedia.org/wikipedia/commons/6/6b/Rotating_globe.gif"> 
-                Global Bites
-            </h1>  
-    </div>
-    <div class = "spline spline-1">
-                <script type="module" src="https://unpkg.com/@splinetool/viewer@1.10.99/build/spline-viewer.js"></script>
-                <spline-viewer url="https://prod.spline.design/7in9EvYre3ThJ8Ah/scene.splinecode"></spline-viewer>
-       
-    </div>
-    <div class = "spline spline-2">
-        <script type="module" src="https://unpkg.com/@splinetool/viewer@1.10.99/build/spline-viewer.js"></script>
-        <spline-viewer url="https://prod.spline.design/vbmivFF0iTWVanlP/scene.splinecode"></spline-viewer>
-        
-    </div>
-    <div class = "spline spline-3">
-        <script type="module" src="https://unpkg.com/@splinetool/viewer@1.10.99/build/spline-viewer.js"></script>
-        <spline-viewer url="https://prod.spline.design/iTYUYcXzpKRnCXOw/scene.splinecode"></spline-viewer>
-    </div>
-    <div class = "spline spline-4">
-        <script type="module" src="https://unpkg.com/@splinetool/viewer@1.10.99/build/spline-viewer.js"></script>
-        <spline-viewer url="https://prod.spline.design/FGcObhOQryRt9Wdo/scene.splinecode"></spline-viewer>
-    </div>
-        <div class="main-container">
-    
-            <div id="map"></div>
+<body>
+  <header>
+    <h1>🌎 World Meals Explorer</h1>
+    <p>Click on a country to discover its national dishes!</p>
+  </header>
 
-        <div class="side-panel">
-            <h2>Recipe Details</h2>
-            <div class="button-container">
-                <button id="add">Add</button>
-                <button id="skip">Skip</button>
-            </div>
+  <main>
+    <div id="map"></div>
+    <div id="dishes"></div>
+  </main>
 
-            <div style="margin-bottom: 15px;">
-                <label id="food" for="food-name-input" style="display: block; margin-bottom: 5px; color: #333;">Eggs Benedict</label>
-            </div>
+  <footer>
+    <p>Hackathon Project - Explore global cuisine 🌍</p>
+  </footer>
 
-            <br>
-            <div id="result"></div>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    const map = L.map('map').setView([20, 0], 2);
 
-            <div style="margin-top: 30px;">
-                <div class="ingredient-item">
-                    <strong>Ingredients:</strong>
-                    <p id="ingredients-p" style="color: #7f8c8d; line-height: 1.6;">
-                        - 1 box (2 count) refrigerated pie crusts <br>
-                        - 6-7 medium apples (e.g., Granny Smith, Honeycrisp), peeled, cored, sliced <br>
-                        - 1/2 cup granulated sugar <br>
-                        - 1/4 cup all-purpose flour <br>
-                        - 1 teaspoon ground cinnamon <br>
-                        - 1/4 teaspoon ground nutmeg (optional) <br>
-                        - 2 tablespoons unsalted butter, cut into small pieces <br>
-                        - 1 tablespoon lemon juice (optional) <br>
-                    </p>
-                </div>
-                <div class="ingredient-item" id="recipe-ps">
-                    <strong>Recipe:</strong>
-                    <p id="recipe-p" style="color: #7f8c8d; line-height: 1.6;">
-                        1. Preheat oven to 425°F (220°C). <br>
-                        2. Unroll one pie crust and gently place it into a 9-inch pie plate. <br>
-                        3. In a large bowl, combine sliced apples, sugar, flour, cinnamon, nutmeg, and lemon juice (if using). Toss until apples are evenly coated. <br>
-                        4. Pour the apple mixture into the pie crust-lined plate. Dot the top with small pieces of butter. <br>
-                        5. Unroll the second pie crust and place it over the apple filling. Trim and crimp the edges to seal. <br>
-                        6. Cut several small slits in the top crust to allow steam to escape. <br>
-                        7. Bake for 15 minutes at 425°F (220°C). <br>
-                        8. Reduce oven temperature to 375°F (190°) <br>
-                    </p>
-                </div>
-        </div>
-    </div>
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
 
-    <!-- Toggle button for ingredients sheet -->
-    <button class="toggle-btn" onclick="toggleSheet()">Ingredients</button>
+    const countries = [
+      { name: 'Canada', lat: 56, lng: -106 },
+      { name: 'Italy', lat: 42.5, lng: 12.5 },
+      { name: 'Japan', lat: 36, lng: 138 }
+    ];
 
-    <!-- Drag-in side sheet -->
-    <div class="ingredients-sheet" id="ingredientsSheet">
-        <button class="close-btn" onclick="toggleSheet()">×</button>
-        <h2>Ingredients</h2>
-        
-        <div class="recipe_1">
-            <strong>'Recipe 1 Name'</strong>
-            <p style="margin-top: 10px; color: #7f8c8d;">-ingredients per recipe-</p>
-        </div>
-        
-        <div class="recipe_2">
-            <strong>'Recipe 2 Name'</strong>
-            <p style="margin-top: 10px; color: #7f8c8d;">-ingredients per recipe-</p>
-        </div>
-        
-        <div class="recipe_3">
-            <strong>'Recipe 3 Name'</strong>
-            <p style="margin-top: 10px; color: #7f8c8d;">-ingredients per recipe-</p>
-        </div>
-    </div>
-    
+    countries.forEach(c => {
+      L.marker([c.lat, c.lng]).addTo(map)
+        .bindPopup(c.name)
+        .on('click', () => showDishes(c.name));
+    });
+
+    async function showDishes(country) {
+      const dishesDiv = document.getElementById('dishes');
+      dishesDiv.innerHTML = '<p class="loading">Loading dishes...</p>';
+
+      try {
+        const res = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?a=${country}`);
+        const data = await res.json();
+
+        if (data.meals) {
+          dishesDiv.innerHTML = '';
+          for (let meal of data.meals) {
+            const imgRes = await fetch(`/image?query=${encodeURIComponent(meal.strMeal)}`);
+            const imgData = await imgRes.json();
+
+            const mealDiv = document.createElement('div');
+            mealDiv.className = 'meal-card';
+            mealDiv.innerHTML = `
+              <img src="${imgData.url}" alt="${meal.strMeal}">
+              <h3>${meal.strMeal}</h3>
+              <p><strong>Category:</strong> ${meal.strCategory}</p>
+              <p><strong>Area:</strong> ${meal.strArea}</p>
+            `;
+            dishesDiv.appendChild(mealDiv);
+          }
+        } else {
+          dishesDiv.innerHTML = '<p class="loading">No dishes found for this country.</p>';
+        }
+      } catch (err) {
+        dishesDiv.innerHTML = '<p class="loading">Error fetching dishes.</p>';
+        console.error(err);
+      }
+    }
+  </script>
 </body>
-    <script src="map.js"></script>
-    <script src="bundle.js"></script>
-    <script src="popups.js"></script>
-    <script src="scripts/bubbles.js"></script>
-    <script src="images.js"></script>
-    <script src="./scripts/add_to_list.js"></script>
-</body>
+</html>
