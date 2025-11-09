@@ -631,7 +631,7 @@ function show_recipe() {
 }
 function _show_recipe() {
   _show_recipe = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-    var text, ingredientDisplay, recipeDisplay, title, prompt, recipe, errorMsg, recipeHtml, parts, ingredients_styled, recipes_styled;
+    var text, ingredientDisplay, recipeDisplay, title, prompt, recipe, errorMsg, recipeHtml, parts, ingredients_styled, recipes_styled, total_time, total_cost;
     return _regeneratorRuntime().wrap(function _callee$(_context) {
       while (1) switch (_context.prev = _context.next) {
         case 0:
@@ -676,9 +676,15 @@ function _show_recipe() {
           recipes_styled = markdownStyling(parts[1]);
           ingredientDisplay.innerHTML = ingredients_styled;
           recipeDisplay.innerHTML = recipes_styled || "";
+          
         case 27:
         case "end":
           return _context.stop();
+        total_time = calculateTime(recipe_list)
+        document.querySelector("#total-time").querySelector(".value").textContent = total_time
+        total_cost = calculateTotalCost(recipe_list)
+        document.querySelector("#total-cost").querySelector(".value").textContent = total_cost
+
       }
     }, _callee);
   }));
@@ -688,35 +694,36 @@ function _show_recipe() {
 function markdownStyling(input) {
   console.log("styling");
   var html = input;
+    // replace **text** with <em>text</em>
+    html = html.replace(/\*\*(.*?)\*\*/g, '<em>$1</em>');
 
-  // replace **text** with <em>text</em>
-  html = html.replace(/\*\*(.*?)\*\*/g, '<em>$1</em>');
+    // split into lines
+    const lines = html.split(/\r?\n/);
+    let result = '';
+    let inList = false;
 
-  // split into lines
-  var lines = html.split(/\r?\n/);
-  var result = '';
-  var inList = false;
-  for (var i = 0; i < lines.length; i++) {
-    var line = lines[i].trim();
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim();
 
-    // match bullet (- ) or numbered (1. 2. etc.)
-    if (/^(-|\d+\.)\s+/.test(line)) {
-      if (!inList) {
-        result += '<ol>';
-        inList = true;
-      }
-      result += '<li>' + line.replace(/^(-|\d+\.)\s+/, '') + '</li>';
-    } else {
-      if (inList) {
-        result += '</ol>';
-        inList = false;
-      }
-      result += line;
+        // match bullet (- ) or numbered (1. 2. etc.)
+        if (/^(-|\d+\.)\s+/.test(line)) {
+            if (!inList) {
+                result += '<ol>';
+                inList = true;
+            }
+            result += '<li>' + line.replace(/^(-|\d+\.)\s+/, '') + '</li>';
+        } else {
+            if (inList) {
+                result += '</ol>';
+                inList = false;
+            }
+            result += line;
+        }
     }
-  }
-  if (inList) result += '</ol>'; // close if file ends mid-list
 
-  return result;
+    if (inList) result += '</ol>'; // close if file ends mid-list
+
+    return result;
 }
 
 },{"./gemini.js":6}],8:[function(require,module,exports){
