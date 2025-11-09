@@ -5,7 +5,7 @@ async function getImage() {
 
     if (data.url) {
     document.getElementById("result").innerHTML =
-        `<img src="${data.url}" alt="${food}" id="food-image" width="400">`;
+        `<center><img src="${data.url}" alt="${food}" id="food-image" width="150" height="150"></center>`;
     } else {
     document.getElementById("result").innerText = "No image found.";
     }

@@ -113,6 +113,14 @@ function updateIngredientsList() {
     }
 }
 
+/*skip button functionality*/
+const skipButton = document.getElementById("skip");
+skipButton.addEventListener("click", async () => {
+    alert("skipped");
+    await show_recipe();
+});
+
+
 // Track if listeners have been added to prevent duplicates
 let listenersAdded = false;
 
@@ -124,7 +132,6 @@ function add_ingredients_to_list() {
     }
 
     const addButton = document.getElementById("add");
-    const skipButton = document.getElementById("skip");
     const recipeText = document.getElementById("recipe-p");
 
     if (!addButton || !recipeText || !skipButton) {
@@ -146,12 +153,6 @@ function add_ingredients_to_list() {
         alert("added to shopping list");
         console.log("click add to basket");
         updateIngredientsList();
-        await show_recipe();
-    });
-    
-    /*skip button functionality*/
-    skipButton.addEventListener("click", async () => {
-        alert("skipped");
         await show_recipe();
     });
 }

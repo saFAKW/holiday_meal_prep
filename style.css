@@ -150,8 +150,9 @@ body {
   padding: 4px;
 }
 
-#dietary-requirements {
+#dietary-requirements{
   display: flex;
+  color: #2c3e50;
   gap: 5px;
   padding: 4px;
 }
@@ -179,19 +180,39 @@ body {
   background: #e6eef6;
 }
 
-#food{
+#food {
   font-size: 20px;
+  color: #2c3e50;
+  transition: all 0.3s ease;
+  display: inline-block;
 }
 
-.element {
-  display: none;
+/* Rainbow gradient animation */
+@keyframes rainbow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
-.element.show {
-    display: block;
-    font-weight: bold;
+/* Wobble animation */
+@keyframes wobble {
+  0%, 100% { transform: rotate(0deg) translateX(0); }
+  25% { transform: rotate(3deg) translateX(2px); }
+  50% { transform: rotate(-3deg) translateX(-2px); }
+  75% { transform: rotate(2deg) translateX(1px); }
+}
+
+/* On hover: rainbow + wobble */
+#food:hover {
+  font-weight: bold;
+  background: linear-gradient(270deg, red, orange, yellow, green, blue, indigo, violet);
+  background-size: 400% 400%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: rainbow 2s linear infinite, wobble 0.4s ease-in-out infinite;
+  cursor: pointer;
 }
 
 #portions{
-  color: pink;
+  color: #2c3e50;
 }
