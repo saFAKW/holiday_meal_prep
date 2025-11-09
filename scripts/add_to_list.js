@@ -57,23 +57,9 @@ function updateIngredientsList() {
     // Get the ingredients text from the display element (it already contains just the ingredients section)
     const ingredientsHtml = ingredientDisplay.innerHTML;
     const ingredientsText = ingredientsHtml.replace(/<br>/gi, '\n').replace(/<[^>]*>/g, '');
-    
-    // Find where ingredients start (after "Ingredients:")
-    let startIndex = ingredientsText.indexOf("Ingredients:");
-    if (startIndex === -1) {
-        console.warn("cannot find 'Ingredients:' mark");
-        const errorItem = document.createElement("div");
-        errorItem.className = "ingredient-item";
-        errorItem.innerHTML = `<p style="color: #7f8c8d;">Could not parse ingredients from recipe.</p>`;
-        sheet.appendChild(errorItem);
-        return;
-    }
-
-    // Extract the ingredients block (everything after "Ingredients:")
-    const ingredientsBlock = ingredientsText.substring(startIndex + "Ingredients:".length).trim();
-    
+   
     // Split by lines and filter for ingredient lines (those starting with "-" or containing ingredient text)
-    const lines = ingredientsBlock.split('\n');
+    const lines = ingredientsText.split('\n');
     let ingredientsFound = 0;
 
     for (const line of lines) {

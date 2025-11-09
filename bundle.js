@@ -8,7 +8,6 @@ var _cost_calculation = require("./scripts/cost_calculation");
 var _bubbles = require("./scripts/bubbles");
 var total = (0, _cost_calculation.calculateTotalCost)("100ml Milk, 50 g Eggs, 50 ml Goat Milk, 100 g Pistachios");
 console.log(total);
-(0, _bubbles.bubbles)();
 
 //giveFunctionToButton()
 
@@ -52,22 +51,9 @@ function updateIngredientsList() {
   var ingredientsHtml = ingredientDisplay.innerHTML;
   var ingredientsText = ingredientsHtml.replace(/<br>/gi, '\n').replace(/<[^>]*>/g, '');
 
-  // Find where ingredients start (after "Ingredients:")
-  var startIndex = ingredientsText.indexOf("Ingredients:");
-  if (startIndex === -1) {
-    console.warn("cannot find 'Ingredients:' mark");
-    var errorItem = document.createElement("div");
-    errorItem.className = "ingredient-item";
-    errorItem.innerHTML = "<p style=\"color: #7f8c8d;\">Could not parse ingredients from recipe.</p>";
-    sheet.appendChild(errorItem);
-    return;
-  }
-
-  // Extract the ingredients block (everything after "Ingredients:")
-  var ingredientsBlock = ingredientsText.substring(startIndex + "Ingredients:".length).trim();
 
   // Split by lines and filter for ingredient lines (those starting with "-" or containing ingredient text)
-  var lines = ingredientsBlock.split('\n');
+  var lines = ingredientsText.split('\n');
   var ingredientsFound = 0;
   var _iterator = _createForOfIteratorHelper(lines),
     _step;
