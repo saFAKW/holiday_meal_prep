@@ -102,7 +102,7 @@ function updateIngredientsList() {
 /*skip button functionality*/
 const skipButton = document.getElementById("skip");
 skipButton.addEventListener("click", async () => {
-    alert("skipped");
+    //alert("skipped");
     await show_recipe();
 });
 
@@ -136,7 +136,7 @@ function add_ingredients_to_list() {
     console.log("Adding event listeners to buttons");
 
     addButton.addEventListener("click", async () => {
-        alert("added to shopping list");
+        //alert("added to shopping list");
         console.log("click add to basket");
         updateIngredientsList();
         await show_recipe();
