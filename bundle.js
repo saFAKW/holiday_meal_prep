@@ -2083,7 +2083,7 @@ function _show_recipe() {
           current_cuisine = british_cuisine[counter];
           console.log("current_cuisine");
           console.log(current_cuisine);
-          title = document.getElementById("food-name-title");
+          title = document.getElementById("food");
           prompt = "Please provide a simple recipe for ".concat(title.textContent, " ").concat(PROMPT);
           _context.next = 12;
           return (0, _gemini.callGeminiApi)(prompt);
