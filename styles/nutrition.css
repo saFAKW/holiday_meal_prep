@@ -226,12 +226,12 @@ html,body{
 }
 
 @keyframes spline-3-keys{
-    0% {transform: translate(65%, -7%);}
-    50% {transform: translate(65%, -7%);}
-    55% {transform: translate(32%, -7%);}
-    75% {transform: translate(32%, -7%);}
-    80% {transform: translate(65%, -7%);}
-    100% {transform: translate(65%, -7%);}
+    0% {transform: translate(65%, -5%);}
+    50% {transform: translate(65%, -5%);}
+    55% {transform: translate(32%, -5%);}
+    75% {transform: translate(32%, -5%);}
+    80% {transform: translate(65%, -5%);}
+    100% {transform: translate(65%, -5%);}
 }
 
 .spline.spline-4{
