@@ -26,6 +26,7 @@ function makeMap(){
 var image = document.getElementById("food");
 image.onmouseover = function(){
     document.getElementById("nutrition-facts").style.display = "block";
+    element.classList.add('show');
 }
 image.onmouseout = function(){
     document.getElementById("nutrition-facts").style.display = "none";

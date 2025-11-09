@@ -44,13 +44,30 @@
 
         <div class="side-panel">
             <h2>Recipe Details</h2>
+            <input id="portions" type="textbox">Enter no. of portions (1-10): </input>
+
             <div class="button-container">
                 <button id="add">Add</button>
                 <button id="skip">Skip</button>
             </div>
 
+            <div id="dietary-requirements">
+                <input type="checkbox" id="vegan" name="vegan" value="vegan">
+                <label for="vegan">Vegan</label><br>
+                <input type="checkbox" id="vegan" name="vegan" value="vegan">
+                <label for="vegan">Vegan</label><br>
+                <input type="checkbox" id="vegetarian" name="vegetarian" value="vegetarian">
+                <label for="vegetarian">Vegetarian</label><br>
+                <input type="checkbox" id="gluten-free" name="gluten-free" value="gluten-free">
+                <label for="gluten-free">Gluten-free</label><br>
+                <input type="checkbox" id="dairy-free" name="dairy-free" value="dairy-free">
+                <label for="dairy-free">Dairy-free</label><br>
+                <input type="checkbox" id="nut-free" name="nut-free" value="nut-free">
+                <label for="nut-free">Nut-free</label><br>
+            </div>
+
             <div style="margin-bottom: 15px;">
-                <label id="food" for="food-name-input" style="display: block; margin-bottom: 5px; color: #333;">Eggs Benedict</label>
+                <label id="food" for="food-name-input" style="display: block; margin-bottom: 5px; color: #333;">__</label>
             </div>
 
             <br>

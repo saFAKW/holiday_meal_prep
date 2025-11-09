@@ -8,7 +8,7 @@ body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   height: 100vh;
   overflow: hidden;
- background: #ffffff;
+  background: #ffffff;
 }
 
 .header {
@@ -147,6 +147,13 @@ body {
   justify-content: right;  /* center horizontally */
   align-items: center;
   gap: 10px;                /* space between buttons */
+  padding: 4px;
+}
+
+#dietary-requirements {
+  display: flex;
+  gap: 5px;
+  padding: 4px;
 }
 
 #add, #skip {
@@ -170,4 +177,21 @@ body {
   height: 750px;       
   flex: 0 0 auto;
   background: #e6eef6;
+}
+
+#food{
+  font-size: 20px;
+}
+
+.element {
+  display: none;
+}
+
+.element.show {
+    display: block;
+    font-weight: bold;
+}
+
+#portions{
+  font-color: pink;
 }
