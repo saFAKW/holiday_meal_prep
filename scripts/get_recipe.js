@@ -64,8 +64,8 @@ export async function show_recipe(){
         counter = 0;
     }
     current_cuisine = british_cuisine[counter];
-    console.log("current_cuisine ${current_cuisine}`)
-    const title = document.getElementById("food-name-title");
+    console.log(`current_cuisine ${current_cuisine}`)
+     const title = document.getElementById("food-name-title");
     const prompt = `Please provide a simple recipe for ${title.textContent} ${PROMPT}`
     const recipe = await callGeminiApi(prompt);
     if(!recipe){    
