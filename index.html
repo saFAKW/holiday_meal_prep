@@ -43,26 +43,24 @@
             <div id="map"></div>
 
         <div class="side-panel">
+            <div>
             <h2>Recipe Details</h2>
 
             <div class="dropdown">
-                <button onclick="myFunction()" class="dropbtn">Utensils Available</button>
+                <button onclick="myFunction()" class="dropbtn" id="utensils">Choose Utensils Available</button>
                 <div id="myDropdown" class="dropdown-content">
-                    <input type="checkbox">spoon, fork etc.<br>
-                    <input type="checkbox">frying pan<br>
-                    <input type="checkbox">bowl<br>
-                    <input type="checkbox">frying pan<br>
-                    <input type="checkbox">potato peeler??<br>
+                    <input type="checkbox"> Spoon, Fork, Knife<br>
+                    <input type="checkbox"> Frying pan<br>
+                    <input type="checkbox"> Bowl<br>
+                    <input type="checkbox"> Sieve<br>
+                    <input type="checkbox"> Whisk<br>
+                    <input type="checkbox"> Potato Peeler<br>
                 </div>
             </div>
-
-            Enter no. of portions (1-10) <input id="portions" type="textbox"></input>
-
-            <div class="button-container">
-                <button id="add">Add</button>
-                <button id="skip">Skip</button>
             </div>
+            Enter no. of portions: <input id="portions" type="number" value="2" min="1" max="10"></input>
 
+            
             <div id="dietary-requirements">
                 <input type="checkbox" id="vegan" name="vegan" value="vegan">
                 <label for="vegan">Vegan</label><br>
@@ -75,6 +73,12 @@
                 <input type="checkbox" id="nut-free" name="nut-free" value="nut-free">
                 <label for="nut-free">Nut-free</label><br>
             </div>
+
+            <div class="button-container">
+                <button id="add">Add</button>
+                <button id="skip">Skip</button>
+            </div>
+
 
             <div style="margin-bottom: 15px;">
                 <label id="food" for="food-name-input" style="display: block; margin-bottom: 5px; color: #333;">Berry Pie</label>
