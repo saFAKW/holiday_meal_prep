@@ -24,6 +24,7 @@ body {
 }
 .title{
   text-align: center;
+  font-size: large;
 }
 .main-container {
   display: flex;
