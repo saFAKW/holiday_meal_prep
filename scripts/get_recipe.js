@@ -1,8 +1,9 @@
 import { callGeminiApi } from './gemini.js';
 
 const british_cuisine = [
-    "Full English Breakfast",
     "Beans on Toast",
+    "Full English Breakfast",
+    "Eggs Benedict",
     "Porridge",
     "Kippers",
     "Black Pudding",

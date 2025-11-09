@@ -2,8 +2,8 @@ import { show_recipe } from './get_recipe.js';
 
 const british_cuisine = [
     "Full English Breakfast",
-    "Eggs Benedict",
     "Beans on Toast",
+    "Eggs Benedict",
     "Porridge",
     "Kippers",
     "Black Pudding",
