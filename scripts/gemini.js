@@ -1,6 +1,11 @@
-const { GoogleGenerativeAI } = require("@google/generative-ai");
+import dotenv from "dotenv";
+dotenv.config();
+
+// Access the key
+const API_KEY = process.env.GEMINI_API_KEY;
+//const { GoogleGenerativeAI } = require("@google/generative-ai");
 //const API_KEY = "AIzaSyAGePYh6PX1JwXAWRFDbUupdeHEa9HQ8NY";
-const API_KEY = "AIzaSyB-exWSJJ91YNijAsp5KbmUrIAKxRBi9VI";
+//const API_KEY = "AIzaSyB-exWSJJ91YNijAsp5KbmUrIAKxRBi9VI";
 const MODEL_NAME = "gemini-2.5-flash";
 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${API_KEY}`;
 
