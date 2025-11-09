@@ -88,9 +88,47 @@ export async function show_recipe(){
         return;
     }
     
+    const recipe_list = recipe.replace(/\n/g, ', ')
     const recipeHtml = recipe.replace(/\n/g, '<br>');
     const parts = recipeHtml.split("Recipe:");
-    ingredientDisplay.innerHTML = parts[0];
-    recipeDisplay.innerHTML = parts[1] || "";
+    const ingredients_styled = markdownStyling(parts[0].replace(/^Ingredients:\s*/, ""));
+    const recipes_styled = markdownStyling(parts[1]);
+    ingredientDisplay.innerHTML = ingredients_styled;
+    recipeDisplay.innerHTML = recipes_styled || "";
 }; 
 
+function markdownStyling(input) {
+    console.log("styling")
+    let html = input;
+
+    // replace **text** with <em>text</em>
+    html = html.replace(/\*\*(.*?)\*\*/g, '<em>$1</em>');
+
+    // split into lines
+    const lines = html.split(/\r?\n/);
+    let result = '';
+    let inList = false;
+
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim();
+
+        // match bullet (- ) or numbered (1. 2. etc.)
+        if (/^(-|\d+\.)\s+/.test(line)) {
+            if (!inList) {
+                result += '<ol>';
+                inList = true;
+            }
+            result += '<li>' + line.replace(/^(-|\d+\.)\s+/, '') + '</li>';
+        } else {
+            if (inList) {
+                result += '</ol>';
+                inList = false;
+            }
+            result += line;
+        }
+    }
+
+    if (inList) result += '</ol>'; // close if file ends mid-list
+
+    return result;
+}
